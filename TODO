@@ -1,0 +1,5 @@
+- Improve Progressbar and make abortable
+- Improve Configuration and eventually safe credentials safely
+- Improve Configuration of class to create selection
+- Think were to put the action -> it would also be nice to be able to trigger the import during startup
+- 

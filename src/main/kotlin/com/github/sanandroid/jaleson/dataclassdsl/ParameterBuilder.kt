@@ -33,7 +33,7 @@ class ParameterBuilder {
     private val defaultValueBuilder = object : Builder<String?>() {
         override fun build() = value?.run {
             " = " +
-                if (typeBuilder.build() == "String") {
+                if (typeBuilder.build() == "String" && this != "null") {
                     "\"$this\""
                 } else {
                     this
