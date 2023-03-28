@@ -45,13 +45,18 @@ class ParameterBuilder {
         defaultValueBuilder.value = defaultValue()
     }
 
-    fun build() = build("     ")
-    fun build(indent: String): String =
-        """
+    fun build(): String {
+        // Id should be optional since salesforce will set it
+        if (nameBuilder.build() == "id") {
+            optional { true }
+            defaultValue { "null" }
+        }
+        return """
                 ${annotationsBuilder.build()}${modifiersBuilder.build()} 
                 ${mutableBuilder.build()} ${nameBuilder.build()}: ${typeBuilder.build()}${if (optionalBuilder.build() == "true") "?" else ""}${
             defaultValueBuilder.build()
         },""".replaceIndent("    ")
+    }
 }
 
 enum class Mutable(val va: String) {

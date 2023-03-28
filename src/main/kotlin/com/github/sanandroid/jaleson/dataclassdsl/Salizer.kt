@@ -5,13 +5,12 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
-import me.campos.corp.jaleson.model.SalesforceType
 import me.campos.corp.jaleson.model.toKotlinType
 import me.campos.corp.jaleson.poet.dataClass
 
 object Salizer {
 
-    fun dataClassFromJson(jsonString: String, packageName: String = "poet"): String {
+    fun dataClassFromJsonForJackson(jsonString: String, packageName: String): String {
         val jsonMap = Json.parseToJsonElement(jsonString).jsonObject.toMap()
         val fields = (jsonMap["fields"] as JsonArray)
         val className = (jsonMap["name"] as JsonPrimitive).content
@@ -42,15 +41,17 @@ object Salizer {
     private fun ParametersBuilder.buildParameters(fields: JsonArray) {
         fields.forEach { field ->
             field as JsonObject
+
             val jsonName = (field["name"] as JsonPrimitive).content
             val variableName = jsonName.replaceFirstChar { char -> char.lowercase() }.replace("__c", "")
-            val type =
-                SalesforceType.valueOf((field["type"] as JsonPrimitive).content.uppercase()).toKotlinType()
+            val type = (field["type"] as JsonPrimitive).content.uppercase().toKotlinType()
+            val optional = (field["nillable"] as JsonPrimitive).content.toBoolean()
+            val mutable = if ((field["updateable"] as JsonPrimitive).content.toBoolean()) Mutable.VAR else Mutable.VAL
+
             parameter {
-                val optional = (field["nillable"] as JsonPrimitive).content.toBoolean()
                 annotations { annotation { "@JsonProperty(\"$jsonName\")" } }
-                mutable { if ((field["updateable"] as JsonPrimitive).content.toBoolean()) Mutable.VAR else Mutable.VAL }
-                name { jsonName }
+                mutable { mutable }
+                name { variableName }
                 optional { optional }
                 type { type }
                 if (optional) {

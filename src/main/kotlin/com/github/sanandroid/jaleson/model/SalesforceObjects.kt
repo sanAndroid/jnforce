@@ -1,6 +1,7 @@
 package me.campos.corp.jaleson.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.intellij.openapi.diagnostic.thisLogger
 
 data class SObjectMetaDataDto(
     @JsonProperty("fields")
@@ -45,8 +46,11 @@ data class FieldDto(
 )
 
 /**
- * Where did I get this list? It would be nice to populate that via api
+ * Where did I get this list? It would be nice to populate that via api.
+ * Also Note that Salesforce Types and Objects are different. For example
+ * There is a Location Object and a Location Type.
  */
+
 enum class SalesforceType {
     ID,
     ADDRESS,
@@ -81,7 +85,12 @@ enum class SalesforceType {
     UNKOWN,
 }
 
-fun SalesforceType.toKotlinType() = when (this) {
+fun String.savelyToSalesforceType() = kotlin.runCatching { SalesforceType.valueOf(this) }.getOrElse {
+    thisLogger().warn("Could not map $this to SalesforceType. Using SalesforceType.UNKOWN")
+    SalesforceType.UNKOWN
+}
+
+fun String.toKotlinType() = when (savelyToSalesforceType()) {
     SalesforceType.BOOLEAN -> MappedType.BOOLEAN
     SalesforceType.DOUBLE -> MappedType.DOUBLE
     SalesforceType.INT -> MappedType.INT

@@ -5,16 +5,17 @@
     <vendor>sanandroid</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.sanandroid.jaleson.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <!-- <toolWindow factoryClass="com.github.sanandroid.jaleson.toolWindow.MyToolWindowFactory" id="MyToolWindow"/> -->
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.sanandroid.jaleson.listeners.MyFrameStateListener"
-                  topic="com.intellij.ide.FrameStateListener"/>
+        <!-- <listener class="com.github.sanandroid.jaleson.listeners.MyFrameStateListener"
+                  topic="com.intellij.ide.FrameStateListener"/> -->
     </applicationListeners>
     <actions>
         <action id="com.github.sanandroid.jaleson.actions.ImportSalesforceDataClasses"
@@ -28,4 +29,13 @@
             <add-to-group group-id="BuildMenu" anchor="first"/>
         </action>
     </actions>
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+            serviceImplementation="com.github.sanandroid.jaleson.settings.JlsForceState"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.github.sanandroid.jaleson.settings.JlsForceConfigurable"
+            id="com.github.sanandroid.jaleson.settings.JlsForceConfigurable"
+            displayName="JlsForce Settings"/>
+    </extensions>
 </idea-plugin>

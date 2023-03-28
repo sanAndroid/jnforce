@@ -19,11 +19,11 @@
 
 <!-- Plugin description -->
 
-Intellij Idea Plugin that aims to create Kotlin Dataclasses based on the definitions obtained from Salesforce's /describe endpoints. The idea is that these dataclasses can be used to serialize and deserialize data into and from Salesforce.
+Intellij Idea Plugin that aims to create Kotlin Dataclasses based on the definitions obtained from Salesforce's /describe endpoints. 
+The idea is that these dataclasses can be used to serialize and deserialize data into and from Salesforce.
 
 This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
 
-To keep everything working, do not remove `<!-- ... -->` sections.
 <!-- Plugin description end -->
 
 ## Installation

@@ -36,17 +36,14 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    // testImplementation(kotlin("compiler-embeddable"))
-    // testImplementation(kotlin("compiler"))
-    // testImplementation(kotlin("test"))
 }
+
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
-
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
+    version.set(properties("platformVersion"))
+    pluginName.set(properties("pluginName"))
+    type.set(properties("pluginType"))
     plugins.set(properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) })
 }
 
