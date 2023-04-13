@@ -1,14 +1,14 @@
-package com.github.sanandroid.jaleson.dataclassdsl
+package com.github.sanandroid.jlsforce.dataclassdsl
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
-import me.campos.corp.jaleson.model.toKotlinType
-import me.campos.corp.jaleson.poet.dataClass
+import me.campos.corp.jlsforce.model.toKotlinType
+import me.campos.corp.jlsforce.poet.dataClass
 
-object Salizer {
+class Salizer {
 
     fun dataClassFromJsonForJackson(jsonString: String, packageName: String): String {
         val jsonMap = Json.parseToJsonElement(jsonString).jsonObject.toMap()
@@ -25,7 +25,7 @@ object Salizer {
                 import { "com.fasterxml.jackson.annotation.JsonProperty" }
 
                 // Salesforce Types Import
-                import { "me.campos.corp.jaleson.model.Address" }
+                import { "me.campos.corp.jlsforce.model.Address" }
             }
             // Right now this automatically added { modifier { "data" } }
             name { className }

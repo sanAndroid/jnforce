@@ -1,10 +1,10 @@
-package me.campos.corp.jaleson.poet
+package me.campos.corp.jlsforce.poet
 
-import com.github.sanandroid.jaleson.dataclassdsl.AnnotationsBuilder
-import com.github.sanandroid.jaleson.dataclassdsl.Builder
-import com.github.sanandroid.jaleson.dataclassdsl.ImportsBuilder
-import com.github.sanandroid.jaleson.dataclassdsl.ModifiersBuilder
-import com.github.sanandroid.jaleson.dataclassdsl.ParametersBuilder
+import com.github.sanandroid.jlsforce.dataclassdsl.AnnotationsBuilder
+import com.github.sanandroid.jlsforce.dataclassdsl.Builder
+import com.github.sanandroid.jlsforce.dataclassdsl.ImportsBuilder
+import com.github.sanandroid.jlsforce.dataclassdsl.ModifiersBuilder
+import com.github.sanandroid.jlsforce.dataclassdsl.ParametersBuilder
 
 fun dataClass(lambda: DataClassBuilder.() -> Unit) =
     DataClassBuilder().apply(lambda)

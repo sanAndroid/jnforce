@@ -1,4 +1,4 @@
-// package com.github.sanandroid.jaleson
+// package com.github.sanandroid.jlsforce
 //
 // import com.intellij.DynamicBundle
 // import org.jetbrains.annotations.NonNls

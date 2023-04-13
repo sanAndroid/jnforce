@@ -1,6 +1,6 @@
-package com.github.sanandroid.jaleson.dataclassdsl
+package com.github.sanandroid.jlsforce.dataclassdsl
 
-import me.campos.corp.jaleson.model.MappedType
+import me.campos.corp.jlsforce.model.MappedType
 
 class ParameterBuilder {
     // TODO this should also use the builder pattern - maybe this will just create uneccary overhead?

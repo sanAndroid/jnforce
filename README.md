@@ -1,7 +1,7 @@
 
-# jaleson
+# jlsforce
 
-![Build](https://github.com/sanAndroid/jaleson/workflows/Build/badge.svg)
+![Build](https://github.com/sanAndroid/jlsforce/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
 
@@ -30,12 +30,12 @@ This specific section is a source for the [plugin.xml](/src/main/resources/META-
 
 - Using IDE built-in plugin system:
 
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "jaleson"</kbd> >
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "jlsforce"</kbd> >
   <kbd>Install Plugin</kbd>
 
 - Manually:
 
-  Download the [latest release](https://github.com/sanAndroid/jaleson/releases/latest) and install it manually using
+  Download the [latest release](https://github.com/sanAndroid/jlsforce/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 

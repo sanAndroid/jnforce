@@ -1,4 +1,4 @@
-package com.github.sanandroid.jaleson.dataclassdsl
+package com.github.sanandroid.jlsforce.dataclassdsl
 
 // It maybe it is better to leave the value nullable instead of using the default value
 interface BaseBuilder {

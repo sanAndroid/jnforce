@@ -1,12 +1,15 @@
-package com.github.sanandroid.jaleson.services
+package com.github.sanandroid.jlsforce.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.sanandroid.jaleson.dataclassdsl.Salizer
-import com.github.sanandroid.jaleson.model.SalesforceCredentials
-import com.github.sanandroid.jaleson.settings.JlsForceState
+import com.github.sanandroid.jlsforce.dataclassdsl.Salizer
+import com.github.sanandroid.jlsforce.helpers.writeFileDirectlyAsText
+import com.github.sanandroid.jlsforce.model.SalesforceCredentials
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressIndicatorProvider
-import com.intellij.openapi.project.ProjectManager
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootManager
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -18,15 +21,42 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-class SalesforceService(private val packagePath: String) : Runnable {
+/**
+ * Runs now as Service - does that make sense? This will probably prevent the service from being instantiated
+ * multiple times -> That's probably not what I want?
+ * TODO() Split this into two classes - one for network requests and one file writer
+ *
+ */
+@Service(Service.Level.PROJECT)
+class SalesforceService(
+    private val project: Project,
+) : Runnable {
 
-    // Maybe I shouldn't use a singleton here, because it might cause problems with intellij
-    private val objectMapper = ObjectMapper()
-    private val client = HttpClient.newHttpClient()
+    companion object {
+        fun instance(project: Project): SalesforceService = project.service()
+
+        // Maybe wrap this in a sep class? -> But that doesn't matter that much since
+        // it's a singleton anyway and the service won't be instantiated multiple times
+        private val client: HttpClient = HttpClient.newHttpClient()
+    }
+
     private var token: String = ""
     private val sobjectSuffix = "data/v52.0/sobjects/"
+
+    private val objectMapperWrapper = ObjectMapper()
     private val configurationState
         get() = JlsForceState.instance
+
+    private val secureConfigurationState
+        get() = JlsForceSecureState.instance
+
+    private val packagePath: String
+        get() =
+            if (configurationState.classPath.isNullOrEmpty()) {
+                ProjectRootManager.getInstance(project).contentSourceRoots[0].canonicalPath!! + "/salesforce/"
+            } else {
+                configurationState.classPath!!
+            }
 
     // TODO I need to make sure that the project is the one the user is currently working on
     private val salesforceCredentials = getCredentials()
@@ -82,10 +112,12 @@ class SalesforceService(private val packagePath: String) : Runnable {
             .GET()
             .build()
         val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
-        val dataClass = Salizer.dataClassFromJsonForJackson(
-            responseAsString,
-            packagePath.split("kotlin/").last().replace("/", ".").removeSurrounding(".") + "salesforce",
-        )
+        val packageName = if (configurationState.packageName.isNullOrEmpty()) {
+            packagePath.split("kotlin/").last().replace("/", ".").removeSurrounding(".")
+        } else {
+            configurationState.packageName!!
+        }
+        val dataClass = Salizer().dataClassFromJsonForJackson(responseAsString, packageName)
         writeFileDirectlyAsText(path = packagePath, fileName = "$sObject.kt", fileContent = dataClass)
     }
 
@@ -106,31 +138,19 @@ class SalesforceService(private val packagePath: String) : Runnable {
             )
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        val newToken = objectMapper.readTree(response.body()).get("access_token").asText()
+        val newToken = objectMapperWrapper.readTree(response.body()).get("access_token").asText()
             ?: throw RuntimeException("Could not get token from response") // Todo Error Handling
         token = newToken
         return newToken
     }
-
-    private fun getProject() = ProjectManager.getInstance().openProjects.first()
 
     // TODO Store the credentials in a more secure format later on
     private fun getCredentials(): SalesforceCredentials =
         SalesforceCredentials(
             instanceUrl = configurationState.baseUrl,
             clientId = configurationState.clientId,
-            clientSecret = configurationState.clientSecret ?: "",
-            username = configurationState.userId,
-            password = configurationState.password ?: "",
+            clientSecret = secureConfigurationState.clientSecret ?: "",
+            username = configurationState.username,
+            password = secureConfigurationState.password ?: "",
         )
-    // val basePath = getProject().basePath
-    // val credentials = File("$basePath/salesforce-credentials.json").readText()
-    // return decodeFromString(SalesforceCredentials.serializer(), credentials)
-    // }
-
-    private fun writeFileDirectlyAsText(path: String = "", fileName: String, fileContent: String) =
-        File("$path$fileName").writeText(fileContent, Charsets.UTF_8)
-
-    private fun readFileDirectlyAsText(fileName: String) =
-        File("src/test/resources/$fileName").readText(Charsets.UTF_8)
 }

@@ -1,4 +1,4 @@
-package me.campos.corp.jaleson.model
+package me.campos.corp.jlsforce.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.intellij.openapi.diagnostic.thisLogger

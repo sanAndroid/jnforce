@@ -1,25 +1,25 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.sanandroid.jaleson</id>
-    <name>jaleson Template</name>
+    <id>com.github.sanandroid.jlsforce</id>
+    <name>jlsforce Template</name>
     <vendor>sanandroid</vendor>
 
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.java</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- <toolWindow factoryClass="com.github.sanandroid.jaleson.toolWindow.MyToolWindowFactory" id="MyToolWindow"/> -->
+        <!-- <toolWindow factoryClass="com.github.sanandroid.jlsforce.toolWindow.MyToolWindowFactory" id="MyToolWindow"/> -->
     </extensions>
 
     <applicationListeners>
-        <!-- <listener class="com.github.sanandroid.jaleson.listeners.MyFrameStateListener"
+        <!-- <listener class="com.github.sanandroid.jlsforce.listeners.MyFrameStateListener"
                   topic="com.intellij.ide.FrameStateListener"/> -->
     </applicationListeners>
     <actions>
-        <action id="com.github.sanandroid.jaleson.actions.ImportSalesforceDataClasses"
-                class="com.github.sanandroid.jaleson.actions.ImportSalesforceDataClasses"
+        <action id="com.github.sanandroid.jlsforce.actions.ImportSalesforceDataClasses"
+                class="com.github.sanandroid.jlsforce.actions.ImportSalesforceDataClasses"
                 text="Import Salesforce Dataclasses"
                 description="Convert Salesforce Object Metadata into a a Kotlin Dataclass">
             <keyboard-shortcut
@@ -31,11 +31,11 @@
     </actions>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-            serviceImplementation="com.github.sanandroid.jaleson.settings.JlsForceState"/>
+            serviceImplementation="com.github.sanandroid.jlsforce.services.JlsForceState"/>
         <applicationConfigurable
             parentId="tools"
-            instance="com.github.sanandroid.jaleson.settings.JlsForceConfigurable"
-            id="com.github.sanandroid.jaleson.settings.JlsForceConfigurable"
+            instance="com.github.sanandroid.jlsforce.settings.JlsForceConfigurable"
+            id="com.github.sanandroid.jlsforce.settings.JlsForceConfigurable"
             displayName="JlsForce Settings"/>
     </extensions>
 </idea-plugin>

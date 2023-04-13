@@ -1,4 +1,4 @@
-package com.github.sanandroid.jaleson.settings
+package com.github.sanandroid.jlsforce.settings
 
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
@@ -9,26 +9,57 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JPasswordField
 
+const val USERNAME = "username"
+const val PASSWORD = "password"
+const val CLIENT_ID = "clientId"
+const val CLIENT_SECRET = "clientSecret"
+const val BASE_URL = "baseUrl"
+const val PACKAGE_NAME = "packageName"
+const val CLASS_PATH = "classPath"
+const val LAYOUTABLE = "layoutable"
+const val CREATABLE = "creatable"
+const val INTERFACES = "interfaces"
+
 /**
  * Supports creating and managing a [JPanel] for the Settings Dialog.
  */
 
 class JlsForceComponent {
     private val panel: JPanel
-    private val myUserNameText = JBTextField()
-    private val myPasswordText = JPasswordField()
-    private val myClientIdText = JBTextField()
-    private val myClientSecretText = JBPasswordField()
-    private val myBaseUrlText = JBTextField()
-    private val myPackageNameText = JBTextField()
-    private val myClassPathText = JBTextField()
-    private val myFilterLayoutable = JBCheckBox("Only load layoutable")
-    private val myFilterCreatable = JBCheckBox("Only load createable")
-    private val myFilterInterfaces = JBCheckBox("Don't load interfaces")
+    private val myUsernameText = JBTextField().apply {
+        name = USERNAME
+    }
+    private val myPasswordText = JPasswordField().apply {
+        name = PASSWORD
+    }
+    private val myClientIdText = JBTextField().apply {
+        name = CLIENT_ID
+    }
+    private val myClientSecretText = JBPasswordField().apply {
+        name = CLIENT_SECRET
+    }
+    private val myBaseUrlText = JBTextField().apply {
+        name = BASE_URL
+    }
+    private val myPackageNameText = JBTextField().apply {
+        name = PACKAGE_NAME
+    }
+    private val myClassPathText = JBTextField().apply {
+        name = CLASS_PATH
+    }
+    private val myFilterLayoutable = JBCheckBox("Only load layoutable").apply {
+        name = LAYOUTABLE
+    }
+    private val myFilterCreatable = JBCheckBox("Only load creatable").apply {
+        name = CREATABLE
+    }
+    private val myFilterInterfaces = JBCheckBox("Don't load interfaces").apply {
+        name = INTERFACES
+    }
 
     init {
         panel = FormBuilder.createFormBuilder()
-            .addLabeledComponent(JBLabel("User name: "), myUserNameText, 1, false)
+            .addLabeledComponent(JBLabel("User name: "), myUsernameText, 1, false)
             .addLabeledComponent(JBLabel("Password"), myPasswordText, 1, false)
             .addLabeledComponent(JBLabel("ClientId"), myClientIdText, 1, false)
             .addLabeledComponent(JBLabel("ClientSecret"), myClientSecretText, 1, false)
@@ -44,15 +75,15 @@ class JlsForceComponent {
 
     fun getPanel() = panel
 
-    fun getPreferredFocusedComponent() = myUserNameText
+    fun getPreferredFocusedComponent() = myUsernameText
 
     val preferredFocusedComponent: JComponent
-        get() = myUserNameText
+        get() = myUsernameText
 
     var userNameText: String
-        get() = myUserNameText.text
+        get() = myUsernameText.text
         set(newText) {
-            myUserNameText.text = newText
+            myUsernameText.text = newText
         }
 
     var passwordText: String

@@ -1,4 +1,4 @@
-package com.github.sanandroid.jaleson.model
+package com.github.sanandroid.jlsforce.model
 
 import kotlinx.serialization.Serializable
 
