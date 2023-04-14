@@ -1,7 +1,7 @@
 package com.github.sanandroid.jlsforce.settings
 
-import com.github.sanandroid.jlsforce.services.JlsForceSecureState
-import com.github.sanandroid.jlsforce.services.JlsForceState
+import com.github.sanandroid.jlsforce.state.JlsForceSecureState
+import com.github.sanandroid.jlsforce.state.JlsForceState
 import com.intellij.openapi.options.Configurable
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
@@ -58,11 +58,11 @@ class JlsForceConfigurable : Configurable {
     }
 
     /**
-     * Not sure yet what to do with optionals here.
+     * Is this the correct action for a reset?
      */
     override fun reset() {
         val settings = JlsForceState.instance
-        val secureSettings = JlsForceSecureState.instance // .instance
+        val secureSettings = JlsForceSecureState.instance
         mySettingsComponent!!.userNameText = settings.username
         mySettingsComponent!!.passwordText = secureSettings.password ?: ""
         mySettingsComponent!!.clientIdText = settings.clientId

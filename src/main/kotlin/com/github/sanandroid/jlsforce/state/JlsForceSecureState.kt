@@ -1,4 +1,4 @@
-package com.github.sanandroid.jlsforce.services
+package com.github.sanandroid.jlsforce.state
 
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.Credentials
@@ -24,32 +24,27 @@ class JlsForceSecureState {
     private val jlsForceState = JlsForceState.instance
 
     var password: String?
-        get() {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.username)
-            val safe = PasswordSafe.instance
-            val credential = safe.get(credentialAttributes)
-            return credential?.password?.toString()
-        }
-        set(newPassword) {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.username)
-            val safe = PasswordSafe.instance
-            val credential = Credentials(jlsForceState.username, newPassword)
-            safe.set(credentialAttributes, credential)
-        }
+        get() = getter(jlsForceState.username)
+        set(newPassword) = setter(jlsForceState.username,newPassword)
+
 
     var clientSecret: String?
-        get() {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.clientId)
-            val safe = PasswordSafe.instance
-            val credential = safe.get(credentialAttributes)
-            return credential?.password?.toString()
-        }
-        set(newClientSecret) {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.clientId)
-            val safe = PasswordSafe.instance
-            val credential = Credentials(jlsForceState.clientId, newClientSecret)
-            safe.set(credentialAttributes, credential)
-        }
+        get() = getter(jlsForceState.clientId)
+        set(newClientSecret) = setter(jlsForceState.clientId, newClientSecret)
+
+    private fun getter(key: String): String? {
+        val credentialAttributes = createCredentialAttributes(key)
+        val safe = PasswordSafe.instance
+        val credential = safe.get(credentialAttributes)
+        return credential?.password?.toString()
+    }
+
+    private fun setter(key: String, secret: String?) {
+        val credentialAttributes = createCredentialAttributes(key)
+        val safe = PasswordSafe.instance
+        val credential = Credentials(jlsForceState.clientId, secret)
+        safe.set(credentialAttributes, credential)
+    }
 
     private fun createCredentialAttributes(key: String): CredentialAttributes {
         val serviceName = generateServiceName("com.github.sanandroid.jlsforce.settings.JForceState", key)

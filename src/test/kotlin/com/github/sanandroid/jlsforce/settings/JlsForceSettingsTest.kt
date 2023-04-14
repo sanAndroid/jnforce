@@ -1,7 +1,7 @@
 package com.github.sanandroid.jlsforce.settings
 
-import com.github.sanandroid.jlsforce.services.JlsForceSecureState
-import com.github.sanandroid.jlsforce.services.JlsForceState
+import com.github.sanandroid.jlsforce.state.JlsForceSecureState
+import com.github.sanandroid.jlsforce.state.JlsForceState
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import com.intellij.ui.components.JBCheckBox
@@ -9,7 +9,7 @@ import com.intellij.ui.components.JBTextField
 import javax.swing.JPasswordField
 
 @TestDataPath("\$CONTENT_ROOT/src/test/testData")
-class JlsForceConfigurableTest : LightJavaCodeInsightFixtureTestCase() {
+class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
 
     fun testUserNameIsUpdated() {
         correctComponentIsUpdated(USERNAME)
@@ -18,7 +18,7 @@ class JlsForceConfigurableTest : LightJavaCodeInsightFixtureTestCase() {
 
     fun testPasswordIsUpdated() {
         correctComponentIsUpdated(PASSWORD)
-        // assert(JlsForceSecureState.instance.password == PASSWORD)k
+        assert(JlsForceSecureState.instance.password == PASSWORD)
     }
 
     fun testClientIdIsUpdated() {
@@ -32,18 +32,18 @@ class JlsForceConfigurableTest : LightJavaCodeInsightFixtureTestCase() {
     }
 
     fun testBaserURlIsUpdated() {
-        correctComponentIsUpdated(CLIENT_ID)
-        assert(JlsForceState.instance.clientId == CLIENT_ID)
+        correctComponentIsUpdated(BASE_URL)
+        assert(JlsForceState.instance.baseUrl == BASE_URL)
     }
 
     fun testPackageName() {
-        correctComponentIsUpdated(CLIENT_ID)
-        assert(JlsForceState.instance.clientId == CLIENT_ID)
+        correctComponentIsUpdated(PACKAGE_NAME)
+        assert(JlsForceState.instance.packageName == PACKAGE_NAME)
     }
 
     fun testClassPath() {
-        correctComponentIsUpdated(CLIENT_ID)
-        assert(JlsForceState.instance.clientId == CLIENT_ID)
+        correctComponentIsUpdated(CLASS_PATH)
+        assert(JlsForceState.instance.classPath == CLASS_PATH)
     }
     fun testLayoutable() {
         correctComponentIsUpdated(LAYOUTABLE, "false")

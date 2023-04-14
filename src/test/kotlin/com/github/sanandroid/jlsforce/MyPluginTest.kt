@@ -1,7 +1,7 @@
 //
 // package com.github.sanandroid.jlsforce
 //
-// import com.github.sanandroid.jlsforce.services.JlsForceState
+// import com.github.sanandroid.jlsforce.state.JlsForceState
 // import com.github.sanandroid.jlsforce.settings.JlsForceConfigurable
 // import com.intellij.testFramework.TestDataPath
 // import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase

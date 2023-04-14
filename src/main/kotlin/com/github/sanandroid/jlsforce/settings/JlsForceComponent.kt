@@ -10,7 +10,7 @@ import javax.swing.JPanel
 import javax.swing.JPasswordField
 
 const val USERNAME = "username"
-const val PASSWORD = "password"
+const val PASSWORD = "passwordField"
 const val CLIENT_ID = "clientId"
 const val CLIENT_SECRET = "clientSecret"
 const val BASE_URL = "baseUrl"

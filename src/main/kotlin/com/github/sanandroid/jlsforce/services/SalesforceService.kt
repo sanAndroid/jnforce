@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.sanandroid.jlsforce.dataclassdsl.Salizer
 import com.github.sanandroid.jlsforce.helpers.writeFileDirectlyAsText
 import com.github.sanandroid.jlsforce.model.SalesforceCredentials
+import com.github.sanandroid.jlsforce.state.JlsForceSecureState
+import com.github.sanandroid.jlsforce.state.JlsForceState
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.progress.ProgressIndicator
@@ -44,11 +46,9 @@ class SalesforceService(
     private val sobjectSuffix = "data/v52.0/sobjects/"
 
     private val objectMapperWrapper = ObjectMapper()
-    private val configurationState
-        get() = JlsForceState.instance
 
-    private val secureConfigurationState
-        get() = JlsForceSecureState.instance
+    private var configurationState = JlsForceState.instance
+    private var secureConfigurationState = JlsForceSecureState.instance
 
     private val packagePath: String
         get() =
@@ -61,9 +61,13 @@ class SalesforceService(
     // TODO I need to make sure that the project is the one the user is currently working on
     private val salesforceCredentials = getCredentials()
 
-    override fun run() = getSObjectsMetadata()
+    override fun run() {
+        updateState()
+        getSObjectsMetadata()
+    }
 
-    fun getSObjectsMetadata() {
+
+    private fun getSObjectsMetadata() {
         val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
             text = "Getting salesforce objects"
         }
@@ -96,7 +100,7 @@ class SalesforceService(
         }
     }
 
-    fun JsonObject.getFilterFlag(filter: Boolean, name: String, invert: Boolean = false) =
+    private fun JsonObject.getFilterFlag(filter: Boolean, name: String, invert: Boolean = false) =
         if (!filter) {
             true
         } else if (invert) {
@@ -144,7 +148,11 @@ class SalesforceService(
         return newToken
     }
 
-    // TODO Store the credentials in a more secure format later on
+    private fun updateState() {
+        configurationState = JlsForceState.instance
+        secureConfigurationState = JlsForceSecureState.instance
+    }
+
     private fun getCredentials(): SalesforceCredentials =
         SalesforceCredentials(
             instanceUrl = configurationState.baseUrl,

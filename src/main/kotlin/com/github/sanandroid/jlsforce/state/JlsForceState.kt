@@ -1,4 +1,4 @@
-package com.github.sanandroid.jlsforce.services
+package com.github.sanandroid.jlsforce.state
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable
  */
 @State(
     name = "com.github.sanandroid.jlsforce.settings.JlsForceState",
-    storages = [Storage("SdkSettingsPlugin.xml")],
+    storages = [Storage("JlsForcePlugin.xml")],
 )
 class JlsForceState : PersistentStateComponent<JlsForceState?> {
 

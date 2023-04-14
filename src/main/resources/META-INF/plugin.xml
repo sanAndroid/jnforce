@@ -31,7 +31,7 @@
     </actions>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-            serviceImplementation="com.github.sanandroid.jlsforce.services.JlsForceState"/>
+            serviceImplementation="com.github.sanandroid.jlsforce.state.JlsForceState"/>
         <applicationConfigurable
             parentId="tools"
             instance="com.github.sanandroid.jlsforce.settings.JlsForceConfigurable"
