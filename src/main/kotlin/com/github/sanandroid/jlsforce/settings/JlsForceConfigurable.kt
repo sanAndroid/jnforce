@@ -11,7 +11,6 @@ import javax.swing.JComponent
  */
 class JlsForceConfigurable : Configurable {
     var mySettingsComponent: JlsForceComponent? = null
-    private val secureSettings by lazy { JlsForceSecureState.instance }
 
     @Nls(capitalization = Nls.Capitalization.Title)
     override fun getDisplayName(): String {
@@ -29,16 +28,17 @@ class JlsForceConfigurable : Configurable {
 
     override fun isModified(): Boolean {
         val settings = JlsForceState.instance
+        val secureSettings = JlsForceSecureState.instance
         var modified = mySettingsComponent?.userNameText != settings.username
-        modified = modified or (mySettingsComponent?.passwordText != secureSettings.password)
         modified = modified or (mySettingsComponent?.clientIdText != settings.clientId)
-        modified = modified or (mySettingsComponent?.clientSecretText != secureSettings.clientSecret)
         modified = modified or (mySettingsComponent?.baseUrlText != settings.baseUrl)
         modified = modified or (mySettingsComponent?.packageNameText != settings.packageName)
         modified = modified or (mySettingsComponent?.classPathText != settings.classPath)
         modified = modified or (mySettingsComponent?.filterLayoutable != settings.filterLayoutable)
         modified = modified or (mySettingsComponent?.filterCreatable != settings.filterCreatable)
         modified = modified or (mySettingsComponent?.filterInterfaces != settings.filterInterfaces)
+        modified = modified or (mySettingsComponent?.clientSecretText != secureSettings.clientSecret)
+        modified = modified or (mySettingsComponent?.passwordText != secureSettings.password)
         return modified
     }
 
@@ -46,15 +46,15 @@ class JlsForceConfigurable : Configurable {
         val settings = JlsForceState.instance
         val secureSettings = JlsForceSecureState.instance
         settings.username = mySettingsComponent?.userNameText ?: ""
-        secureSettings.password = mySettingsComponent?.passwordText ?: ""
         settings.clientId = mySettingsComponent?.clientIdText ?: ""
-        secureSettings.clientSecret = mySettingsComponent?.clientSecretText ?: ""
         settings.baseUrl = mySettingsComponent?.baseUrlText ?: ""
         settings.packageName = mySettingsComponent?.packageNameText ?: ""
         settings.classPath = mySettingsComponent?.classPathText ?: ""
         settings.filterLayoutable = mySettingsComponent?.filterLayoutable ?: true
         settings.filterCreatable = mySettingsComponent?.filterCreatable ?: true
         settings.filterInterfaces = mySettingsComponent?.filterInterfaces ?: false
+        secureSettings.clientSecret = mySettingsComponent?.clientSecretText ?: ""
+        secureSettings.password = mySettingsComponent?.passwordText ?: ""
     }
 
     /**
@@ -64,15 +64,15 @@ class JlsForceConfigurable : Configurable {
         val settings = JlsForceState.instance
         val secureSettings = JlsForceSecureState.instance
         mySettingsComponent!!.userNameText = settings.username
-        mySettingsComponent!!.passwordText = secureSettings.password ?: ""
         mySettingsComponent!!.clientIdText = settings.clientId
-        mySettingsComponent!!.clientSecretText = secureSettings.clientSecret ?: ""
         mySettingsComponent!!.packageNameText = settings.packageName ?: ""
         mySettingsComponent!!.classPathText = settings.classPath ?: ""
         mySettingsComponent!!.baseUrlText = settings.baseUrl
         mySettingsComponent!!.filterLayoutable = settings.filterLayoutable
         mySettingsComponent!!.filterCreatable = settings.filterCreatable
         mySettingsComponent!!.filterInterfaces = settings.filterInterfaces
+        mySettingsComponent!!.clientSecretText = secureSettings.clientSecret ?: ""
+        mySettingsComponent!!.passwordText = secureSettings.password ?: ""
     }
 
     override fun disposeUIResources() {

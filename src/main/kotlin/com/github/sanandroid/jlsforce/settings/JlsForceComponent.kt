@@ -7,10 +7,9 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 import javax.swing.JPanel
-import javax.swing.JPasswordField
 
 const val USERNAME = "username"
-const val PASSWORD = "passwordField"
+const val PASSWORD = "password"
 const val CLIENT_ID = "clientId"
 const val CLIENT_SECRET = "clientSecret"
 const val BASE_URL = "baseUrl"
@@ -29,15 +28,11 @@ class JlsForceComponent {
     private val myUsernameText = JBTextField().apply {
         name = USERNAME
     }
-    private val myPasswordText = JPasswordField().apply {
-        name = PASSWORD
-    }
+
     private val myClientIdText = JBTextField().apply {
         name = CLIENT_ID
     }
-    private val myClientSecretText = JBPasswordField().apply {
-        name = CLIENT_SECRET
-    }
+
     private val myBaseUrlText = JBTextField().apply {
         name = BASE_URL
     }
@@ -55,6 +50,13 @@ class JlsForceComponent {
     }
     private val myFilterInterfaces = JBCheckBox("Don't load interfaces").apply {
         name = INTERFACES
+    }
+
+    private val myPasswordText = JBPasswordField().apply {
+        name = PASSWORD
+    }
+    private val myClientSecretText = JBPasswordField().apply {
+        name = CLIENT_SECRET
     }
 
     init {
@@ -91,7 +93,6 @@ class JlsForceComponent {
         set(newText) {
             myPasswordText.text = newText
         }
-
     var clientIdText: String
         get() = myClientIdText.text
         set(newText) {

@@ -16,17 +16,18 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         assert(JlsForceState.instance.username == USERNAME)
     }
 
-    fun testPasswordIsUpdated() {
-        correctComponentIsUpdated(PASSWORD)
-        assert(JlsForceSecureState.instance.password == PASSWORD)
-    }
-
     fun testClientIdIsUpdated() {
         correctComponentIsUpdated(CLIENT_ID)
         assert(JlsForceState.instance.clientId == CLIENT_ID)
     }
+    fun testPasswordIsUpdated() {
+        JlsForceState.instance.username = "username"
+        correctComponentIsUpdated(PASSWORD)
+        assert(JlsForceSecureState.instance.password == PASSWORD)
+    }
 
     fun testClientSecretIsUpdated() {
+        JlsForceState.instance.clientId = "clientId"
         correctComponentIsUpdated(CLIENT_SECRET)
         assert(JlsForceSecureState.instance.clientSecret == CLIENT_SECRET)
     }
@@ -69,7 +70,11 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         when (val jComponent = (panel?.components?.find { it.name == componentName }!!)) {
             is JBCheckBox -> jComponent.isSelected = setTo.toBoolean()
             is JBTextField -> jComponent.text = setTo
-            is JPasswordField -> jComponent.text = setTo
+            is JPasswordField -> {
+                (panel.components?.find { it.name == CLIENT_ID }!! as JBTextField).text = CLIENT_ID
+                (panel.components?.find { it.name == USERNAME }!! as JBTextField).text = USERNAME
+                jComponent.text = setTo
+            }
         }
         jlsForceConfigurable.apply()
     }
