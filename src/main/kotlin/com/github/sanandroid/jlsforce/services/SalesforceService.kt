@@ -23,10 +23,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 /**
- * Runs now as Service - does that make sense? This will probably prevent the service from being instantiated
- * multiple times -> That's probably not what I want?
  * TODO() Split this into two classes - one for network requests and one file writer
- *
  */
 
 const val SOBJECT_SUFFIX = "data/v52.0/sobjects/"
