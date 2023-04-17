@@ -3,7 +3,6 @@ package com.github.sanandroid.jlsforce.services
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.sanandroid.jlsforce.dataclassdsl.Salizer
 import com.github.sanandroid.jlsforce.helpers.writeFileDirectlyAsText
-import com.github.sanandroid.jlsforce.model.SalesforceCredentials
 import com.github.sanandroid.jlsforce.state.JlsForceSecureState
 import com.github.sanandroid.jlsforce.state.JlsForceState
 import com.intellij.openapi.components.Service
@@ -29,6 +28,9 @@ import java.net.http.HttpResponse
  * TODO() Split this into two classes - one for network requests and one file writer
  *
  */
+
+const val SOBJECT_SUFFIX = "data/v52.0/sobjects/"
+
 @Service(Service.Level.PROJECT)
 class SalesforceService(
     private val project: Project,
@@ -37,127 +39,133 @@ class SalesforceService(
     companion object {
         fun instance(project: Project): SalesforceService = project.service()
 
-        // Maybe wrap this in a sep class? -> But that doesn't matter that much since
-        // it's a singleton anyway and the service won't be instantiated multiple times
         private val client: HttpClient = HttpClient.newHttpClient()
+        private val objectMapperWrapper = ObjectMapper()
     }
-
-    private var token: String = ""
-    private val sobjectSuffix = "data/v52.0/sobjects/"
-
-    private val objectMapperWrapper = ObjectMapper()
-
-    private var configurationState = JlsForceState.instance
-    private var secureConfigurationState = JlsForceSecureState.instance
-
-    private val packagePath: String
-        get() =
-            if (configurationState.classPath.isNullOrEmpty()) {
-                ProjectRootManager.getInstance(project).contentSourceRoots[0].canonicalPath!! + "/salesforce/"
-            } else {
-                configurationState.classPath!!
-            }
-
-    // TODO I need to make sure that the project is the one the user is currently working on
-    private val salesforceCredentials = getCredentials()
 
     override fun run() {
-        updateState()
-        getSObjectsMetadata()
-    }
-
-    private fun getSObjectsMetadata() {
+        val (jlsForceState, jlsForceSecureState, packagePath) = getJlsForceState()
+        File(packagePath).mkdirs()
         val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
             text = "Getting salesforce objects"
         }
-        val token = getToken()
+        val token = getToken(jlsForceState, jlsForceSecureState)
+        if (jlsForceState.useClassFilters) {
+            importSObjectsByFilter(progressIndicator, jlsForceState, packagePath, token)
+        }
+        importSObjectsByList(progressIndicator, jlsForceState, packagePath, token)
+    }
+
+    private fun importSObjectsByList(
+        progressIndicator: ProgressIndicator,
+        jlsForceState: JlsForceState,
+        packagePath: String,
+        token: String,
+    ) {
+        val objectList = jlsForceState.classList.split(",", ";").map { it.trim() }
+        objectList.forEachIndexed { index, className ->
+            createDataclass(className, jlsForceState, packagePath, token)
+            progressIndicator.fraction = index.toDouble() / objectList.size
+            progressIndicator.text2 = "$index of ${objectList.size}"
+        }
+    }
+
+    private fun importSObjectsByFilter(
+        progressIndicator: ProgressIndicator,
+        jlsForceState: JlsForceState,
+        packagePath: String,
+        token: String,
+    ) {
+        val fields = getListOfSObjects(jlsForceState, token)
+        val numberOfFields = fields.size
+        fields.forEachIndexed { index, sObject ->
+            sObject as JsonObject
+
+            if (progressIndicator.isCanceled) return
+
+            val className = (sObject["name"] as JsonPrimitive).content
+            if (evalulateFilters(sObject, jlsForceState)) {
+                createDataclass(className, jlsForceState, packagePath, token)
+            }
+
+            progressIndicator.fraction = index.toDouble() / numberOfFields
+            progressIndicator.text2 = "$index of $numberOfFields"
+        }
+    }
+
+    private fun evalulateFilters(sObject: JsonObject, jlsForceState: JlsForceState) =
+        sObject.getFilterFlag(filter = jlsForceState.filterLayoutable, name = "layoutable") &&
+            sObject.getFilterFlag(filter = jlsForceState.filterInterfaces, name = "interface", invert = true) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterCreatable, name = "createable")
+
+    private fun getListOfSObjects(jlsForceState: JlsForceState, token: String): JsonArray {
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("${salesforceCredentials.instanceUrl}/services/$sobjectSuffix"))
+            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX"))
             .header("Authorization", "Bearer $token")
             .GET()
             .build()
         val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
         val jsonMap = Json.parseToJsonElement(responseAsString).jsonObject.toMap()
         val fields = (jsonMap["sobjects"] as JsonArray)
-        val numberOfFields = fields.size
-        File(packagePath).mkdirs()
-
-        fields.forEachIndexed { index, sObject ->
-            if (progressIndicator.isCanceled) return
-            sObject as JsonObject
-            val className = (sObject["name"] as JsonPrimitive).content
-
-            if (
-                sObject.getFilterFlag(filter = configurationState.filterLayoutable, name = "layoutable") &&
-                sObject.getFilterFlag(filter = configurationState.filterInterfaces, name = "interface") &&
-                sObject.getFilterFlag(filter = configurationState.filterCreatable, name = "createable")
-            ) {
-                createDataclass(className)
-            }
-            progressIndicator.fraction = index.toDouble() / numberOfFields
-            progressIndicator.text2 = "$index of $numberOfFields"
-        }
+        return fields
     }
 
-    private fun JsonObject.getFilterFlag(filter: Boolean, name: String, invert: Boolean = false) =
+    private fun JsonObject.getFilterFlag(filter: Boolean, name: String, invert: Boolean = false): Boolean {
         if (!filter) {
-            true
-        } else if (invert) {
+            return true
+        }
+        return if (invert) {
             !this[name].toString().toBoolean()
         } else {
             this[name].toString().toBoolean()
         }
+    }
 
-    private fun createDataclass(sObject: String) {
+    private fun createDataclass(sObject: String, jlsForceState: JlsForceState, packagePath: String, token: String) {
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("${salesforceCredentials.instanceUrl}/services/$sobjectSuffix$sObject/describe"))
-            .header("Authorization", "Bearer ${getToken()}")
+            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject/describe"))
+            .header("Authorization", "Bearer $token")
             .GET()
             .build()
         val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
-        val packageName = if (configurationState.packageName.isNullOrEmpty()) {
+        val packageName = if (jlsForceState.packageName.isNullOrEmpty()) {
             packagePath.split("kotlin/").last().replace("/", ".").removeSurrounding(".")
         } else {
-            configurationState.packageName!!
+            jlsForceState.packageName!!
         }
         val dataClass = Salizer().dataClassFromJsonForJackson(responseAsString, packageName)
         writeFileDirectlyAsText(path = packagePath, fileName = "$sObject.kt", fileContent = dataClass)
     }
 
-    /**
-     * TODO Now gets called for every request, but better to used cached token
-     */
-    private fun getToken(): String {
+    private fun getToken(jlsForceState: JlsForceState, jlsForceSecureState: JlsForceSecureState): String {
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("${salesforceCredentials.instanceUrl}/services/oauth2/token"))
+            .uri(URI.create("${jlsForceState.baseUrl}/services/oauth2/token"))
             .header("Content-Type", "application/x-www-form-urlencoded")
             .POST(
                 HttpRequest.BodyPublishers.ofString(
-                    "grant_type=password&client_id=${salesforceCredentials.clientId}" +
-                        "&client_secret=${salesforceCredentials.clientSecret}&" +
-                        "username=${salesforceCredentials.username}&" +
-                        "password=${salesforceCredentials.password}",
+                    "grant_type=password&client_id=${jlsForceState.clientId}" +
+                        "&client_secret=${jlsForceSecureState.clientSecret}&" +
+                        "username=${jlsForceState.username}&" +
+                        "password=${jlsForceSecureState.password}",
                 ),
             )
             .build()
+
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        val newToken = objectMapperWrapper.readTree(response.body()).get("access_token").asText()
-            ?: throw RuntimeException("Could not get token from response") // Todo Error Handling
-        token = newToken
-        return newToken
+        return objectMapperWrapper.readTree(response.body()).get("access_token").asText()
+            ?: throw RuntimeException("Could not get token from response")
     }
 
-    private fun updateState() {
-        configurationState = JlsForceState.instance
-        secureConfigurationState = JlsForceSecureState.instance
-    }
-
-    private fun getCredentials(): SalesforceCredentials =
-        SalesforceCredentials(
-            instanceUrl = configurationState.baseUrl,
-            clientId = configurationState.clientId,
-            clientSecret = secureConfigurationState.clientSecret ?: "",
-            username = configurationState.username,
-            password = secureConfigurationState.password ?: "",
-        )
+    private fun getJlsForceState() =
+        JlsForceState.instance.let { jlsForceState ->
+            Triple(
+                jlsForceState,
+                JlsForceSecureState.instance,
+                if (jlsForceState.classPath.isNullOrEmpty()) {
+                    ProjectRootManager.getInstance(project).contentSourceRoots[0].canonicalPath!! + "/salesforce/"
+                } else {
+                    "${project.basePath}/src/main/kotlin/${jlsForceState.classPath!!}/".replace("//", "/").replace("\\s".toRegex(), "")
+                },
+            )
+        }
 }
