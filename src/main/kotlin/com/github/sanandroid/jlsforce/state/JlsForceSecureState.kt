@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable
 class JlsForceSecureState {
 
     val safe = PasswordSafe.instance
+
     @Nullable
     fun getState() = this
 

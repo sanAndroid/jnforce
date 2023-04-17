@@ -5,6 +5,8 @@ import com.github.sanandroid.jlsforce.state.JlsForceState
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.components.JBRadioButton
+import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
 import javax.swing.JPasswordField
 
@@ -20,6 +22,7 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         correctComponentIsUpdated(CLIENT_ID)
         assert(JlsForceState.instance.clientId == CLIENT_ID)
     }
+
     fun testPasswordIsUpdated() {
         JlsForceState.instance.username = "username"
         correctComponentIsUpdated(PASSWORD)
@@ -46,19 +49,43 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         correctComponentIsUpdated(CLASS_PATH)
         assert(JlsForceState.instance.classPath == CLASS_PATH)
     }
+
     fun testLayoutable() {
+        JlsForceState.instance.useClassFilters = true
+        JlsForceState.instance.useClassList = false
         correctComponentIsUpdated(LAYOUTABLE, "false")
         assert(!JlsForceState.instance.filterLayoutable)
     }
 
     fun testCreatable() {
+        JlsForceState.instance.useClassFilters = true
+        JlsForceState.instance.useClassList = false
         correctComponentIsUpdated(CREATABLE, "false")
         assert(!JlsForceState.instance.filterCreatable)
     }
 
     fun testInterfaces() {
+        JlsForceState.instance.useClassFilters = true
+        JlsForceState.instance.useClassList = false
         correctComponentIsUpdated(INTERFACES, "true")
         assert(JlsForceState.instance.filterInterfaces)
+    }
+
+    fun testClassTextfield() {
+        correctComponentIsUpdated(CLASS_LIST)
+        assert(JlsForceState.instance.classList == CLASS_LIST)
+    }
+
+    fun testUseClassList() {
+        correctComponentIsUpdated(USE_CLASS_LIST, "true")
+        assert(JlsForceState.instance.useClassList)
+        assert(!JlsForceState.instance.useClassFilters)
+    }
+
+    fun testSelectUseClassFilters() {
+        correctComponentIsUpdated(USE_CLASS_FILTERS, "true")
+        assert(JlsForceState.instance.useClassFilters)
+        assert(!JlsForceState.instance.useClassList)
     }
 
     private fun correctComponentIsUpdated(
@@ -69,6 +96,8 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         val panel = jlsForceConfigurable.createComponent()
         when (val jComponent = (panel?.components?.find { it.name == componentName }!!)) {
             is JBCheckBox -> jComponent.isSelected = setTo.toBoolean()
+            is JBRadioButton -> jComponent.isSelected = setTo.toBoolean()
+            is JBTextArea -> jComponent.text = setTo
             is JBTextField -> jComponent.text = setTo
             is JPasswordField -> {
                 (panel.components?.find { it.name == CLIENT_ID }!! as JBTextField).text = CLIENT_ID

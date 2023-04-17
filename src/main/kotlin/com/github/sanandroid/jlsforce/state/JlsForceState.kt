@@ -35,6 +35,10 @@ class JlsForceState : PersistentStateComponent<JlsForceState?> {
     var filterCreatable = true
     var filterInterfaces = false
 
+    var classList = ""
+    var useClassFilters: Boolean = false
+    var useClassList: Boolean = true
+
     companion object {
         val instance: JlsForceState
             get() = ApplicationManager.getApplication().getService(JlsForceState::class.java)

@@ -37,6 +37,9 @@ class JlsForceConfigurable : Configurable {
         modified = modified or (mySettingsComponent?.filterLayoutable != settings.filterLayoutable)
         modified = modified or (mySettingsComponent?.filterCreatable != settings.filterCreatable)
         modified = modified or (mySettingsComponent?.filterInterfaces != settings.filterInterfaces)
+        modified = modified or (mySettingsComponent?.useClassList != settings.useClassList)
+        modified = modified or (mySettingsComponent?.useClassFilters != settings.useClassFilters)
+        modified = modified or (mySettingsComponent?.classList != settings.classList)
         modified = modified or (mySettingsComponent?.clientSecretText != secureSettings.clientSecret)
         modified = modified or (mySettingsComponent?.passwordText != secureSettings.password)
         return modified
@@ -53,13 +56,15 @@ class JlsForceConfigurable : Configurable {
         settings.filterLayoutable = mySettingsComponent?.filterLayoutable ?: true
         settings.filterCreatable = mySettingsComponent?.filterCreatable ?: true
         settings.filterInterfaces = mySettingsComponent?.filterInterfaces ?: false
+
+        settings.useClassList = mySettingsComponent?.useClassList ?: true
+        settings.useClassFilters = mySettingsComponent?.useClassFilters ?: false
+        settings.classList = mySettingsComponent?.classList ?: ""
+
         secureSettings.clientSecret = mySettingsComponent?.clientSecretText ?: ""
         secureSettings.password = mySettingsComponent?.passwordText ?: ""
     }
 
-    /**
-     * Is this the correct action for a reset?
-     */
     override fun reset() {
         val settings = JlsForceState.instance
         val secureSettings = JlsForceSecureState.instance
@@ -71,6 +76,11 @@ class JlsForceConfigurable : Configurable {
         mySettingsComponent!!.filterLayoutable = settings.filterLayoutable
         mySettingsComponent!!.filterCreatable = settings.filterCreatable
         mySettingsComponent!!.filterInterfaces = settings.filterInterfaces
+
+        mySettingsComponent!!.useClassFilters != settings.useClassFilters
+        mySettingsComponent!!.classList != settings.classList
+        mySettingsComponent!!.useClassList != settings.useClassList
+
         mySettingsComponent!!.clientSecretText = secureSettings.clientSecret ?: ""
         mySettingsComponent!!.passwordText = secureSettings.password ?: ""
     }

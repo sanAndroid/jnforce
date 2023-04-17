@@ -66,7 +66,6 @@ class SalesforceService(
         getSObjectsMetadata()
     }
 
-
     private fun getSObjectsMetadata() {
         val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
             text = "Getting salesforce objects"
