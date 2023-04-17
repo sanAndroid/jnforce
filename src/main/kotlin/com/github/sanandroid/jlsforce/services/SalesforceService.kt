@@ -22,10 +22,6 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-/**
- * TODO() Split this into two classes - one for network requests and one file writer
- */
-
 const val SOBJECT_SUFFIX = "data/v52.0/sobjects/"
 
 @Service(Service.Level.PROJECT)
