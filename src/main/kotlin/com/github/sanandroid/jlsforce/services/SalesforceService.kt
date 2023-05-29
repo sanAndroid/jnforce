@@ -3,16 +3,29 @@ package com.github.sanandroid.jlsforce.services
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.sanandroid.jlsforce.dataclassdsl.Salizer
 import com.github.sanandroid.jlsforce.helpers.writeFileDirectlyAsText
+import com.github.sanandroid.jlsforce.settings.CREATEABLE
+import com.github.sanandroid.jlsforce.settings.CUSTOM
+import com.github.sanandroid.jlsforce.settings.DELETABLE
+import com.github.sanandroid.jlsforce.settings.LAYOUTABLE
+import com.github.sanandroid.jlsforce.settings.MERGEABLE
+import com.github.sanandroid.jlsforce.settings.REPLICATEABLE
+import com.github.sanandroid.jlsforce.settings.RETRIEVEABLE
+import com.github.sanandroid.jlsforce.settings.SEARCHABLE
+import com.github.sanandroid.jlsforce.settings.UPDATEABLE
 import com.github.sanandroid.jlsforce.state.JlsForceSecureState
 import com.github.sanandroid.jlsforce.state.JlsForceState
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressIndicatorProvider
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
@@ -29,11 +42,14 @@ class SalesforceService(
     private val project: Project,
 ) : Runnable {
 
+    val fileSeparator = File.separator ?: "/"
+
     companion object {
         fun instance(project: Project): SalesforceService = project.service()
-
         private val client: HttpClient = HttpClient.newHttpClient()
         private val objectMapperWrapper = ObjectMapper()
+        var token = ""
+        private val logger = logger<SalesforceService>()
     }
 
     override fun run() {
@@ -42,7 +58,7 @@ class SalesforceService(
         val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
             text = "Getting salesforce objects"
         }
-        val token = getToken(jlsForceState, jlsForceSecureState)
+        token = getToken(jlsForceState, jlsForceSecureState)
         if (jlsForceState.useClassFilters) {
             importSObjectsByFilter(progressIndicator, jlsForceState, packagePath, token)
         }
@@ -69,7 +85,7 @@ class SalesforceService(
         packagePath: String,
         token: String,
     ) {
-        val fields = getListOfSObjects(jlsForceState, token)
+        val fields = getListOfSObjects(jlsForceState, token) ?: return
         val numberOfFields = fields.size
         fields.forEachIndexed { index, sObject ->
             sObject as JsonObject
@@ -87,20 +103,36 @@ class SalesforceService(
     }
 
     private fun evalulateFilters(sObject: JsonObject, jlsForceState: JlsForceState) =
-        sObject.getFilterFlag(filter = jlsForceState.filterLayoutable, name = "layoutable") &&
-            sObject.getFilterFlag(filter = jlsForceState.filterInterfaces, name = "interface", invert = true) &&
-            sObject.getFilterFlag(filter = jlsForceState.filterCreatable, name = "createable")
+        sObject.getFilterFlag(filter = jlsForceState.filterCustom, name = CUSTOM) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterCreatable, name = CREATEABLE) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterDeletable, name = DELETABLE) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterMergeable, name = MERGEABLE) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterLayoutable, name = LAYOUTABLE) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterReplicateable, name = REPLICATEABLE) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterRetrieveable, name = RETRIEVEABLE) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterSearchable, name = SEARCHABLE) &&
+            sObject.getFilterFlag(filter = jlsForceState.filterUpdateable, name = UPDATEABLE)
 
-    private fun getListOfSObjects(jlsForceState: JlsForceState, token: String): JsonArray {
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX"))
+    private fun getListOfSObjects(jlsForceState: JlsForceState, token: String): JsonArray? {
+        val objectListUrl = "${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX".useFS()
+        val requestBuilder = HttpRequest.newBuilder()
+            .uri(URI.create(objectListUrl))
             .header("Authorization", "Bearer $token")
             .GET()
-            .build()
-        val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
-        val jsonMap = Json.parseToJsonElement(responseAsString).jsonObject.toMap()
-        val fields = (jsonMap["sobjects"] as JsonArray)
-        return fields
+
+        val salesforceResponse = makeApiRequest(
+            requestBuilder = requestBuilder,
+            onSuccess = { response ->
+                SalesforceResponse.Success(
+                    Json.parseToJsonElement(response.body()).jsonObject.toMap()
+                )
+            },
+        )
+
+        return if (salesforceResponse is SalesforceResponse.Success<Map<String, JsonElement>>) {
+            val jsonMap = salesforceResponse.responseBodyAsString
+            (jsonMap["sobjects"] as JsonArray)
+        } else null
     }
 
     private fun JsonObject.getFilterFlag(filter: Boolean, name: String, invert: Boolean = false): Boolean {
@@ -115,38 +147,113 @@ class SalesforceService(
     }
 
     private fun createDataclass(sObject: String, jlsForceState: JlsForceState, packagePath: String, token: String) {
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject/describe"))
+        val packageName = getPackageName(jlsForceState, packagePath)
+        val requestBuilder = HttpRequest.newBuilder()
+            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject/describe".useFS()))
             .header("Authorization", "Bearer $token")
             .GET()
-            .build()
-        val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
-        val packageName = if (jlsForceState.packageName.isNullOrEmpty()) {
-            packagePath.split("kotlin/").last().replace("/", ".").removeSurrounding(".")
-        } else {
-            jlsForceState.packageName!!
-        }
-        val dataClass = Salizer().dataClassFromJsonForJackson(responseAsString, packageName)
-        writeFileDirectlyAsText(path = packagePath, fileName = "$sObject.kt", fileContent = dataClass)
+        // val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
+        val salesforceResponse = makeApiRequest(
+            requestBuilder = requestBuilder,
+            onSuccess = { responseAsString ->
+                SalesforceResponse.Success(Salizer().dataClassFromJsonForJackson(responseAsString.body(), packageName))
+            },
+        )
+        if (salesforceResponse is SalesforceResponse.Success)
+            writeFileDirectlyAsText(
+                path = packagePath,
+                fileName = "$sObject.kt",
+                fileContent = salesforceResponse.responseBodyAsString
+            )
+    }
+
+    private fun getPackageName(
+        jlsForceState: JlsForceState,
+        packagePath: String
+    ) = if (jlsForceState.packageName.isNullOrEmpty()) {
+        packagePath.split("kotlin$fileSeparator").last().replace(fileSeparator, ".").removeSurrounding(".")
+    } else {
+        jlsForceState.packageName!!
     }
 
     private fun getToken(jlsForceState: JlsForceState, jlsForceSecureState: JlsForceSecureState): String {
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("${jlsForceState.baseUrl}/services/oauth2/token"))
-            .header("Content-Type", "application/x-www-form-urlencoded")
-            .POST(
-                HttpRequest.BodyPublishers.ofString(
-                    "grant_type=password&client_id=${jlsForceState.clientId}" +
-                        "&client_secret=${jlsForceSecureState.clientSecret}&" +
-                        "username=${jlsForceState.username}&" +
-                        "password=${jlsForceSecureState.password}",
-                ),
-            )
-            .build()
+        val request = getTokenRequestBuilder(jlsForceState, jlsForceSecureState)
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        return objectMapperWrapper.readTree(response.body()).get("access_token").asText()
-            ?: throw RuntimeException("Could not get token from response")
+        val salesforceResponse = makeApiRequest(request,
+            { response ->
+                SalesforceResponse
+                    .Success(objectMapperWrapper.readTree(response.body()).get("access_token").asText())
+            }
+        )
+        if (salesforceResponse is SalesforceResponse.Success) {
+            return salesforceResponse.responseBodyAsString.toString()
+        } else {
+            throw Exception("Could not get token from Salesforce")
+        }
+    }
+
+    private fun getTokenRequest(
+        jlsForceState: JlsForceState,
+        jlsForceSecureState: JlsForceSecureState
+    ): HttpRequest.Builder = HttpRequest.newBuilder()
+        .uri(URI.create("${jlsForceState.baseUrl}/services/oauth2/token".useFS()))
+        .header("Content-Type", "application/x-www-form-urlencoded")
+        .POST(
+            HttpRequest.BodyPublishers.ofString(
+                "grant_type=password&client_id=${jlsForceState.clientId}" +
+                    "&client_secret=${jlsForceSecureState.clientSecret}&" +
+                    "username=${jlsForceState.username}&" +
+                    "password=${jlsForceSecureState.password}",
+            ),
+        )
+
+    private fun <T : Any> makeApiRequest(
+        requestBuilder: HttpRequest.Builder,
+        onSuccess: (HttpResponse<String>) -> SalesforceResponse.Success<T>,
+        onError: (HttpResponse<String>) -> SalesforceResponse.Error<T> = defaultErrorHandler(),
+    ): SalesforceResponse<T> {
+        client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString()).let { response ->
+            if (response.statusCode() in 200..299)
+                return onSuccess(response)
+            if (response.statusCode() == 401) {
+                return retryWithNewToken(onSuccess, onError, requestBuilder)
+            }
+            return onError(response)
+        }
+    }
+
+    private fun <T : Any> retryWithNewToken(
+        onSuccess: (HttpResponse<String>) -> SalesforceResponse.Success<T>,
+        onError: (HttpResponse<String>) -> SalesforceResponse.Error<T>,
+        requestBuilder: HttpRequest.Builder
+    ): SalesforceResponse<T> {
+        val tokenRequest = getTokenRequestBuilder(getJlsForceState().first, getJlsForceState().second)
+        client.send(tokenRequest.build(), HttpResponse.BodyHandlers.ofString()).let { tokenResponse ->
+            if (tokenResponse.statusCode() !in 200..299)
+                return onError(tokenResponse)
+            token = objectMapperWrapper.readTree(tokenResponse.body()).get("access_token").asText()
+
+        }
+        val request = requestBuilder.setHeader("Authorization", "Bearer $token").build()
+        val secondResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
+        if (secondResponse.statusCode() in 200..299)
+            return onSuccess(secondResponse)
+        return onError(secondResponse)
+    }
+
+    private fun getTokenRequestBuilder(
+        jlsForceState: JlsForceState,
+        jlsForceSecureState: JlsForceSecureState
+    ) = getTokenRequest(jlsForceState, jlsForceSecureState)
+
+    private fun <T> defaultErrorHandler() = { response: HttpResponse<String> ->
+        val content = "Error communication with Salesforce: ${response.statusCode()}\n${response.body()}"
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup("Error communication with Salesforce")
+            .createNotification(content, NotificationType.ERROR)
+            .notify(project)
+        logger.error(content)
+        SalesforceResponse.Error<T>()
     }
 
     private fun getJlsForceState() =
@@ -155,10 +262,21 @@ class SalesforceService(
                 jlsForceState,
                 JlsForceSecureState.instance,
                 if (jlsForceState.classPath.isNullOrEmpty()) {
-                    ProjectRootManager.getInstance(project).contentSourceRoots[0].canonicalPath!! + "/salesforce/"
+                    ProjectRootManager.getInstance(project).contentSourceRoots[0].canonicalPath!! + "/salesforce/".useFS()
                 } else {
-                    "${project.basePath}/src/main/kotlin/${jlsForceState.classPath!!}/".replace("//", "/").replace("\\s".toRegex(), "")
+                    "${project.basePath}/src/main/kotlin/${jlsForceState.classPath!!}/"
+                        .replace("//", "/")
+                        .replace("\\\\", "\\")
+                        .replace("\\s".toRegex(), "")
+                        .useFS()
                 },
             )
         }
+
+    private fun String.useFS() = replace("/", fileSeparator)
+}
+
+sealed class SalesforceResponse<T> {
+    class Success<T>(val responseBodyAsString: T) : SalesforceResponse<T>()
+    class Error<T> : SalesforceResponse<T>()
 }

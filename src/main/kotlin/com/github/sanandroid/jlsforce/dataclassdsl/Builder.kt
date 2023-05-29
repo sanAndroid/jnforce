@@ -12,7 +12,6 @@ open class Builder<T> : BaseBuilder {
         return this
     }
 
-    // TODO improve o this
     override fun build(): String = value?.toString() ?: ""
 }
 

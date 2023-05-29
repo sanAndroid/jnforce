@@ -28,6 +28,11 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         correctComponentIsUpdated(PASSWORD)
         assert(JlsForceSecureState.instance.password == PASSWORD)
     }
+    fun testSecurityTokenIsUpdated() {
+        JlsForceState.instance.username = "username"
+        correctComponentIsUpdated(SECURITY_TOKEN)
+        assert(JlsForceSecureState.instance.securityToken == SECURITY_TOKEN)
+    }
 
     fun testClientSecretIsUpdated() {
         JlsForceState.instance.clientId = "clientId"
@@ -50,25 +55,64 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         assert(JlsForceState.instance.classPath == CLASS_PATH)
     }
 
+    private fun activateClassFilters() =
+        JlsForceState.instance.apply {
+            useClassFilters = true
+            useClassList = false
+        }
+
+    fun testCreatable() {
+        activateClassFilters()
+        correctComponentIsUpdated(CREATEABLE, "false")
+        assert(!JlsForceState.instance.filterCreatable)
+    }
+
+    fun testCustom() {
+        activateClassFilters()
+        correctComponentIsUpdated(CUSTOM, "false")
+        assert(!JlsForceState.instance.filterCustom)
+    }
+
+    fun testDeletable() {
+        activateClassFilters()
+        correctComponentIsUpdated(DELETABLE, "false")
+        assert(!JlsForceState.instance.filterDeletable)
+    }
+
+    fun testMergeable() {
+        activateClassFilters()
+        correctComponentIsUpdated(MERGEABLE, "false")
+        assert(!JlsForceState.instance.filterMergeable)
+    }
+
     fun testLayoutable() {
-        JlsForceState.instance.useClassFilters = true
-        JlsForceState.instance.useClassList = false
+        activateClassFilters()
         correctComponentIsUpdated(LAYOUTABLE, "false")
         assert(!JlsForceState.instance.filterLayoutable)
     }
 
-    fun testCreatable() {
-        JlsForceState.instance.useClassFilters = true
-        JlsForceState.instance.useClassList = false
-        correctComponentIsUpdated(CREATABLE, "false")
-        assert(!JlsForceState.instance.filterCreatable)
+    fun testReplicateable() {
+        activateClassFilters()
+        correctComponentIsUpdated(REPLICATEABLE, "false")
+        assert(!JlsForceState.instance.filterReplicateable)
     }
 
-    fun testInterfaces() {
-        JlsForceState.instance.useClassFilters = true
-        JlsForceState.instance.useClassList = false
-        correctComponentIsUpdated(INTERFACES, "true")
-        assert(JlsForceState.instance.filterInterfaces)
+    fun testRetrieveable() {
+        activateClassFilters()
+        correctComponentIsUpdated(RETRIEVEABLE, "false")
+        assert(!JlsForceState.instance.filterRetrieveable)
+    }
+
+   fun testSearchable() {
+        activateClassFilters()
+        correctComponentIsUpdated(SEARCHABLE, "false")
+        assert(!JlsForceState.instance.filterSearchable)
+    }
+
+    fun testUpdateable() {
+        activateClassFilters()
+        correctComponentIsUpdated(UPDATEABLE, "false")
+        assert(!JlsForceState.instance.filterUpdateable)
     }
 
     fun testClassTextfield() {

@@ -3,17 +3,17 @@ package com.github.sanandroid.jlsforce.dataclassdsl
 import me.campos.corp.jlsforce.model.MappedType
 
 class ParameterBuilder {
-    // TODO this should also use the builder pattern - maybe this will just create uneccary overhead?
-    fun annotations(lambda: AnnotationsBuilder.() -> Unit) = annotationsBuilder.apply(lambda)
     private val annotationsBuilder = AnnotationsBuilder()
+    fun annotations(lambda: AnnotationsBuilder.() -> Unit) = annotationsBuilder.apply(lambda)
+
     private val modifiersBuilder = ModifiersBuilder()
+    fun modifiers(lambda: ModifiersBuilder.() -> Unit) = modifiersBuilder.apply(lambda)
 
     private val typeBuilder = Builder<MappedType>()
     fun type(type: Builder<MappedType>.() -> MappedType) {
         typeBuilder.set(type)
     }
 
-    // TODO Maybe out this in a container
     private val mutableBuilder = Builder<Mutable>()
     fun mutable(mutable: Builder<Mutable>.() -> Mutable) {
         mutableBuilder.set(mutable)

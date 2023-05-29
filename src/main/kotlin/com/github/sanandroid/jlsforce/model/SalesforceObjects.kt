@@ -92,8 +92,11 @@ fun String.savelyToSalesforceType() = kotlin.runCatching { SalesforceType.valueO
 
 fun String.toKotlinType() = when (savelyToSalesforceType()) {
     SalesforceType.BOOLEAN -> MappedType.BOOLEAN
-    SalesforceType.DOUBLE -> MappedType.DOUBLE
+    SalesforceType.DOUBLE, SalesforceType.PERCENT, SalesforceType.CURRENCY -> MappedType.DOUBLE
     SalesforceType.INT -> MappedType.INT
+    SalesforceType.LONG -> MappedType.LONG
     SalesforceType.ADDRESS -> MappedType.ADDRESS
+    SalesforceType.LOCATION -> MappedType.LOCATION
+    SalesforceType.LONG -> MappedType.LONG
     else -> MappedType.STRING
 }

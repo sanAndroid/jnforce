@@ -13,7 +13,7 @@ class Salizer {
     fun dataClassFromJsonForJackson(jsonString: String, packageName: String): String {
         val jsonMap = Json.parseToJsonElement(jsonString).jsonObject.toMap()
         val fields = (jsonMap["fields"] as JsonArray)
-        val className = (jsonMap["name"] as JsonPrimitive).content
+        val className = (jsonMap["name"] as JsonPrimitive).content.qualify()
 
         val dataClass = dataClass {
             packageName { packageName }
@@ -26,6 +26,7 @@ class Salizer {
 
                 // Salesforce Types Import
                 import { "me.campos.corp.jlsforce.model.Address" }
+                import { "me.campos.corp.jlsforce.model.Location" }
             }
             // Right now this automatically added { modifier { "data" } }
             name { className }
@@ -43,7 +44,7 @@ class Salizer {
             field as JsonObject
 
             val jsonName = (field["name"] as JsonPrimitive).content
-            val variableName = jsonName.replaceFirstChar { char -> char.lowercase() }.replace("__c", "")
+            val variableName = jsonName.replaceFirstChar { char -> char.lowercase() }.qualify()
             val type = (field["type"] as JsonPrimitive).content.uppercase().toKotlinType()
             val optional = (field["nillable"] as JsonPrimitive).content.toBoolean()
             val mutable = if ((field["updateable"] as JsonPrimitive).content.toBoolean()) Mutable.VAR else Mutable.VAL
@@ -60,4 +61,6 @@ class Salizer {
             }
         }
     }
+
+    fun String.qualify(): String = replace("__c", "").replace("__s", "").replace("_", "")
 }

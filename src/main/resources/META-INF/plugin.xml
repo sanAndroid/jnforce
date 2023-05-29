@@ -10,7 +10,9 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- <toolWindow factoryClass="com.github.sanandroid.jlsforce.toolWindow.MyToolWindowFactory" id="MyToolWindow"/> -->
+        <notificationGroup id="Error communication with Salesforce"
+                           displayType="STICKY_BALLOON"
+                           key="jlsforce.notifiers.httperror"/>
     </extensions>
 
     <applicationListeners>
@@ -26,7 +28,7 @@
                 keymap="$default"
                 first-keystroke="control alt A"
                 second-keystroke="C"/>
-            <add-to-group group-id="BuildMenu" anchor="first"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
     </actions>
     <extensions defaultExtensionNs="com.intellij">

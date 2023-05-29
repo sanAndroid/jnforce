@@ -31,9 +31,15 @@ class JlsForceState : PersistentStateComponent<JlsForceState?> {
     var classPath: String? = null
     var packageName: String? = null
 
-    var filterLayoutable = true
+    var filterLayoutable = false
     var filterCreatable = true
-    var filterInterfaces = false
+    var filterCustom = false
+    var filterDeletable = true
+    var filterMergeable = true
+    var filterReplicateable = true
+    var filterRetrieveable = true
+    var filterSearchable = true
+    var filterUpdateable = true
 
     var classList = ""
     var useClassFilters: Boolean = false

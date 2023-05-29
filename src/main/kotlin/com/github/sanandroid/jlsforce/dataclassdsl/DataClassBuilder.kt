@@ -11,26 +11,26 @@ fun dataClass(lambda: DataClassBuilder.() -> Unit) =
 
 class DataClassBuilder {
 
-    val packageName = Builder<String>()
+    private val packageName = Builder<String>()
     fun packageName(name: Builder<String>.() -> String) {
         packageName.set(name)
     }
 
-    val importsBuilder = ImportsBuilder()
+    private val importsBuilder = ImportsBuilder()
     fun imports(lambda: ImportsBuilder.() -> Unit) = importsBuilder.apply(lambda)
 
-    val annotationsBuilder = AnnotationsBuilder()
+    private val annotationsBuilder = AnnotationsBuilder()
     fun annotations(lambda: AnnotationsBuilder.() -> Unit) = annotationsBuilder.apply(lambda)
 
-    val modifiersBuilder = ModifiersBuilder()
+    private val modifiersBuilder = ModifiersBuilder()
     fun modifiers(lambda: ModifiersBuilder.() -> Unit) = modifiersBuilder.apply(lambda)
 
-    val className = Builder<String>()
+    private val className = Builder<String>()
     fun name(name: Builder<String>.() -> String) {
         className.set(name)
     }
 
-    val parametersBuilder: ParametersBuilder = ParametersBuilder()
+    private val parametersBuilder: ParametersBuilder = ParametersBuilder()
     fun parameters(lambda: ParametersBuilder.() -> Unit) = parametersBuilder.apply(lambda)
 
     fun build(): String =

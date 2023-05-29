@@ -18,12 +18,21 @@ const val USERNAME = "username"
 const val PASSWORD = "password"
 const val CLIENT_ID = "clientId"
 const val CLIENT_SECRET = "clientSecret"
+const val SECURITY_TOKEN = "securityToken"
 const val BASE_URL = "baseUrl"
 const val PACKAGE_NAME = "packageName"
 const val CLASS_PATH = "classPath"
-const val LAYOUTABLE = "filterLayoutable"
-const val CREATABLE = "filterCreatable"
-const val INTERFACES = "filterInterfaces"
+
+const val CREATEABLE = "createable"
+const val CUSTOM = "custom"
+const val DELETABLE = "deletable"
+const val LAYOUTABLE = "layoutable"
+const val MERGEABLE = "mergeable"
+const val REPLICATEABLE = "replicateable"
+const val RETRIEVEABLE = "retrieveable"
+const val SEARCHABLE = "searchable"
+const val UPDATEABLE = "updateable"
+
 const val USE_CLASS_LIST = "useClassList"
 const val CLASS_LIST = "classList"
 const val USE_CLASS_FILTERS = "useClassFilters"
@@ -53,23 +62,54 @@ class JlsForceComponent {
     private val myClassPathText = JBTextField().apply {
         name = CLASS_PATH
     }
+    private val myFilterCreatable = JBCheckBox("Only load creatable").apply {
+        name = CREATEABLE
+        isVisible = false
+    }
+    private val myFilterCustom = JBCheckBox("Only load custom").apply {
+        name = CUSTOM
+        isVisible = false
+    }
+
+    private val myFilterDeletable = JBCheckBox("Only load deletable").apply {
+        name = DELETABLE
+        isVisible = false
+    }
+
     private val myFilterLayoutable = JBCheckBox("Only load layoutable").apply {
         name = LAYOUTABLE
         isVisible = false
     }
-    private val myFilterCreatable = JBCheckBox("Only load creatable").apply {
-        name = CREATABLE
+
+    private val myFilterMergeable = JBCheckBox("Only load mergeable").apply {
+        name = MERGEABLE
         isVisible = false
     }
-    private val myFilterInterfaces = JBCheckBox("Don't load interfaces").apply {
-        name = INTERFACES
+    private val myFilterReplicateable = JBCheckBox("Only load replicatable").apply {
+        name = REPLICATEABLE
         isVisible = false
     }
+    private val myFilterRetrievable = JBCheckBox("Only load retrievable").apply {
+        name = RETRIEVEABLE
+        isVisible = false
+    }
+    private val myFilterSearchable = JBCheckBox("Only load searchable").apply {
+        name = SEARCHABLE
+        isVisible = false
+    }
+    private val myFilterUpdateable = JBCheckBox("Only load updateable").apply {
+        name = UPDATEABLE
+        isVisible = false
+    }
+
     private val myPasswordText = JBPasswordField().apply {
         name = PASSWORD
     }
     private val myClientSecretText = JBPasswordField().apply {
         name = CLIENT_SECRET
+    }
+    private val mySecurityTokenText = JBPasswordField().apply {
+        name = SECURITY_TOKEN
     }
     private val myUseClassFiltersButton = JBRadioButton("Use filters").apply {
         name = USE_CLASS_FILTERS
@@ -102,6 +142,8 @@ class JlsForceComponent {
             add(myUsernameText)
             add(JBLabel("Password"))
             add(myPasswordText)
+            add (JBLabel("Security Token"))
+            add(mySecurityTokenText)
             add(JBLabel("ClientId"))
             add(myClientIdText)
             add(JBLabel("ClientSecret"))
@@ -118,15 +160,27 @@ class JlsForceComponent {
             add(myUseClassFiltersButton)
             add(myClassListTextField)
             add(myFilterCreatable)
-            add(myFilterInterfaces)
+            add(myFilterCustom)
+            add(myFilterDeletable)
             add(myFilterLayoutable)
+            add(myFilterMergeable)
+            add(myFilterReplicateable)
+            add(myFilterRetrievable)
+            add(myFilterSearchable)
+            add(myFilterUpdateable)
             if (myUseClassListButton.isSelected) {
                 myClassListTextField.isVisible = true
             }
             if (myUseClassFiltersButton.isSelected) {
                 myFilterCreatable.isVisible = true
-                myFilterInterfaces.isVisible = true
+                myFilterCustom.isVisible = true
+                myFilterDeletable.isVisible = true
                 myFilterLayoutable.isVisible = true
+                myFilterMergeable.isVisible = true
+                myFilterReplicateable.isVisible = true
+                myFilterRetrievable.isVisible = true
+                myFilterSearchable.isVisible = true
+                myFilterUpdateable.isVisible = true
             }
         }
     }
@@ -145,10 +199,17 @@ class JlsForceComponent {
         }
 
     var passwordText: String
-        get() = myPasswordText.text
+        get() = myPasswordText.password.joinToString("")
         set(newText) {
             myPasswordText.text = newText
         }
+
+    var securityTokenText: String
+        get() = mySecurityTokenText.password.joinToString("")
+        set(newText) {
+            mySecurityTokenText.text = newText
+        }
+
     var clientIdText: String
         get() = myClientIdText.text
         set(newText) {
@@ -156,7 +217,7 @@ class JlsForceComponent {
         }
 
     var clientSecretText: String
-        get() = myClientSecretText.text
+        get() = myClientSecretText.password.joinToString("")
         set(newText) {
             myClientSecretText.text = newText
         }
@@ -178,23 +239,54 @@ class JlsForceComponent {
             myClassPathText.text = newText
         }
 
-    var filterLayoutable: Boolean
-        get() = myFilterLayoutable.isSelected
-        set(newStatus) {
-            myFilterInterfaces.isSelected = newStatus
-        }
-
     var filterCreatable: Boolean
         get() = myFilterCreatable.isSelected
         set(newStatus) {
             myFilterCreatable.isSelected = newStatus
         }
-
-    var filterInterfaces: Boolean
-        get() = myFilterInterfaces.isSelected
+    var filterCustom: Boolean
+        get() = myFilterCustom.isSelected
         set(newStatus) {
-            myFilterInterfaces.isSelected = newStatus
+            myFilterCustom.isSelected = newStatus
         }
+
+    var filterDeletable: Boolean
+        get() = myFilterDeletable.isSelected
+        set(newStatus) {
+            myFilterDeletable.isSelected = newStatus
+        }
+    var filterLayoutable: Boolean
+        get() = myFilterLayoutable.isSelected
+        set(newStatus) {
+            myFilterCustom.isSelected = newStatus
+        }
+
+    var filterMergeable: Boolean
+        get() = myFilterMergeable.isSelected
+        set(newStatus) {
+            myFilterMergeable.isSelected = newStatus
+        }
+    var filterReplicateable: Boolean
+        get() = myFilterReplicateable.isSelected
+        set(newStatus) {
+            myFilterReplicateable.isSelected = newStatus
+        }
+    var filterRetrieveable: Boolean
+        get() = myFilterRetrievable.isSelected
+        set(newStatus) {
+            myFilterRetrievable.isSelected = newStatus
+        }
+    var filterSearchable: Boolean
+        get() = myFilterSearchable.isSelected
+        set(newStatus) {
+            myFilterSearchable.isSelected = newStatus
+        }
+    var filterUpdateable: Boolean
+        get() = myFilterUpdateable.isSelected
+        set(newStatus) {
+            myFilterUpdateable.isSelected = newStatus
+        }
+
     var useClassList: Boolean
         get() = myUseClassListButton.isSelected
         set(newStatus) {
@@ -214,9 +306,16 @@ class JlsForceComponent {
     inner class UseClassFilterAction : AbstractAction() {
         override fun actionPerformed(@NotNull e: ActionEvent) = with(panel) {
             // layout = GridLayout(0, 1)
-            myFilterLayoutable.isVisible = true
             myFilterCreatable.isVisible = true
-            myFilterInterfaces.isVisible = true
+            myFilterCustom.isVisible = true
+            myFilterDeletable.isVisible = true
+            myFilterMergeable.isVisible = true
+            myFilterLayoutable.isVisible = true
+            myFilterReplicateable.isVisible = true
+            myFilterRetrievable.isVisible = true
+            myFilterSearchable.isVisible = true
+            myFilterUpdateable.isVisible = true
+
             myClassListTextField.isVisible = false
             revalidate()
             repaint()
@@ -225,9 +324,16 @@ class JlsForceComponent {
 
     inner class UseClassListAction : AbstractAction() {
         override fun actionPerformed(@NotNull e: ActionEvent) = with(panel) {
-            myFilterLayoutable.isVisible = false
             myFilterCreatable.isVisible = false
-            myFilterInterfaces.isVisible = false
+            myFilterCustom.isVisible = false
+            myFilterDeletable.isVisible = false
+            myFilterMergeable.isVisible = false
+            myFilterLayoutable.isVisible = false
+            myFilterReplicateable.isVisible = false
+            myFilterRetrievable.isVisible = false
+            myFilterSearchable.isVisible = false
+            myFilterUpdateable.isVisible = false
+
             myClassListTextField.isVisible = true
             revalidate()
             repaint()

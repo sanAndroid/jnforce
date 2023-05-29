@@ -1,9 +1,10 @@
-package com.github.sanandroid.jlsforce.model
+package com.github.sanandroid.jlsforce.dataclassdsl
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import me.campos.corp.jlsforce.model.Address
+import me.campos.corp.jlsforce.model.Location
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -67,7 +68,7 @@ data class Lead(
     @JsonProperty("Rating")
     var rating: String? = null,
     @JsonProperty("AnnualRevenue")
-    var annualRevenue: String? = null,
+    var annualRevenue: Double? = null,
     @JsonProperty("NumberOfEmployees")
     var numberOfEmployees: Int? = null,
     @JsonProperty("OwnerId")
@@ -127,15 +128,15 @@ data class Lead(
     @JsonProperty("NumberofLocations__c")
     var numberofLocations: Double? = null,
     @JsonProperty("GeoLocation__Latitude__s")
-    var geoLocation__Latitude__s: Double,
+    var geoLocationLatitude: Double,
     @JsonProperty("GeoLocation__Longitude__s")
-    var geoLocation__Longitude__s: Double,
+    var geoLocationLongitude: Double,
     @JsonProperty("GeoLocation__c")
-    val geoLocation: String,
+    val geoLocation: Location,
     @JsonProperty("Checkbox__c")
     var checkbox: Boolean,
     @JsonProperty("Currency__c")
-    var currency: String? = null,
+    var currency: Double? = null,
     @JsonProperty("Date__c")
     var date: String? = null,
 )
