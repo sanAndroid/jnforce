@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.sanandroid.jlsforce</id>
-    <name>jlsforce Template</name>
+    <name>JlsForce Template</name>
     <vendor>sanandroid</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -10,9 +10,9 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <notificationGroup id="Error communication with Salesforce"
-                           displayType="STICKY_BALLOON"
-                           key="jlsforce.notifiers.httperror"/>
+<!--        <notificationGroup id="Error communication with Salesforce"-->
+<!--                           displayType="STICKY_BALLOON"-->
+<!--                           key="com.github.sanandroid.jlsforce.services"/>-->
     </extensions>
 
     <applicationListeners>
@@ -23,7 +23,7 @@
         <action id="com.github.sanandroid.jlsforce.actions.ImportSalesforceDataClasses"
                 class="com.github.sanandroid.jlsforce.actions.ImportSalesforceDataClasses"
                 text="Import Salesforce Dataclasses"
-                description="Convert Salesforce Object Metadata into a a Kotlin Dataclass">
+                description="Convert salesforce object metadata into a a Kotlin dataclass">
             <keyboard-shortcut
                 keymap="$default"
                 first-keystroke="control alt A"

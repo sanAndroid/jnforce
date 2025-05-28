@@ -1,5 +1,7 @@
 package com.github.sanandroid.jlsforce.services
 
+import ADDRESS_TEMPLATE
+import LOCATION_TEMPLATE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.sanandroid.jlsforce.dataclassdsl.Salizer
 import com.github.sanandroid.jlsforce.helpers.writeFileDirectlyAsText
@@ -55,6 +57,7 @@ class SalesforceService(
     override fun run() {
         val (jlsForceState, jlsForceSecureState, packagePath) = getJlsForceState()
         File(packagePath).mkdirs()
+        copyAddressAndLocation(jlsForceState, packagePath)
         val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
             text = "Getting salesforce objects"
         }
@@ -63,6 +66,14 @@ class SalesforceService(
             importSObjectsByFilter(progressIndicator, jlsForceState, packagePath, token)
         }
         importSObjectsByList(progressIndicator, jlsForceState, packagePath, token)
+    }
+
+    private fun copyAddressAndLocation(jlsForceState: JlsForceState, packagePath: String) {
+        val packageDirective = "package ${getPackageName(jlsForceState, packagePath)}"
+        val address = packageDirective + ADDRESS_TEMPLATE
+        val location = packageDirective + LOCATION_TEMPLATE
+        writeFileDirectlyAsText(path = packagePath, "Address.kt", address)
+        writeFileDirectlyAsText(path = packagePath, "Location.kt", location)
     }
 
     private fun importSObjectsByList(
@@ -170,11 +181,14 @@ class SalesforceService(
     private fun getPackageName(
         jlsForceState: JlsForceState,
         packagePath: String
-    ) = if (jlsForceState.packageName.isNullOrEmpty()) {
-        packagePath.split("kotlin$fileSeparator").last().replace(fileSeparator, ".").removeSurrounding(".")
-    } else {
-        jlsForceState.packageName!!
-    }
+    ) = (
+        if (jlsForceState.packageName.isNullOrEmpty()) {
+            packagePath.split("kotlin$fileSeparator").last().replace(fileSeparator, ".").removeSuffix(".")
+                .removePrefix(".")
+        } else {
+            jlsForceState.packageName!!.removeSuffix(".").removePrefix(".")
+        }
+    ).let { "$it\n" }
 
     private fun getToken(jlsForceState: JlsForceState, jlsForceSecureState: JlsForceSecureState): String {
         val request = getTokenRequestBuilder(jlsForceState, jlsForceSecureState)
@@ -203,7 +217,7 @@ class SalesforceService(
                 "grant_type=password&client_id=${jlsForceState.clientId}" +
                     "&client_secret=${jlsForceSecureState.clientSecret}&" +
                     "username=${jlsForceState.username}&" +
-                    "password=${jlsForceSecureState.password}",
+                    "password=${jlsForceSecureState.password}${jlsForceSecureState.securityToken}",
             ),
         )
 
@@ -249,7 +263,9 @@ class SalesforceService(
     private fun <T> defaultErrorHandler() = { response: HttpResponse<String> ->
         val content = "Error communication with Salesforce: ${response.statusCode()}\n${response.body()}"
         NotificationGroupManager.getInstance()
-            .getNotificationGroup("Error communication with Salesforce")
+            //.getNotificationGroup("Error communication with Salesforce")
+            .registeredNotificationGroups
+            .first()
             .createNotification(content, NotificationType.ERROR)
             .notify(project)
         logger.error(content)

@@ -7,6 +7,7 @@ interface BaseBuilder {
 
 open class Builder<T> : BaseBuilder {
     var value: T? = null
+
     fun set(lambda: Builder<T>.() -> T): Builder<T> {
         value = lambda()
         return this

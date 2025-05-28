@@ -24,7 +24,7 @@ class Salizer {
                 import { "com.fasterxml.jackson.annotation.JsonInclude" }
                 import { "com.fasterxml.jackson.annotation.JsonProperty" }
 
-                // Salesforce Types Import
+                // Salesforce Types Imports
                 import { "me.campos.corp.jlsforce.model.Address" }
                 import { "me.campos.corp.jlsforce.model.Location" }
             }
