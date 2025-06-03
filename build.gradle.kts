@@ -29,9 +29,14 @@ repositories {
     mavenCentral()
 }
 
-// Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
@@ -59,8 +64,7 @@ qodana {
     cachePath.set(provider { file(".qodana").canonicalPath })
     reportPath.set(provider { file("build/reports/inspections").canonicalPath })
     saveReport.set(true)
-    showReport.set(environment("QODANA_SHOW_REPORT").map { it.toBoolean() }
-        .getOrElse(false))
+    showReport.set(environment("QODANA_SHOW_REPORT").map { it.toBoolean() }.getOrElse(false))
 }
 
 // Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
@@ -100,9 +104,7 @@ tasks {
             properties("pluginVersion").map { pluginVersion ->
                 with(changelog) {
                     renderItem(
-                        (getOrNull(pluginVersion) ?: getUnreleased())
-                            .withHeader(false)
-                            .withEmptySections(false),
+                        (getOrNull(pluginVersion) ?: getUnreleased()).withHeader(false).withEmptySections(false),
                         Changelog.OutputType.HTML,
                     )
                 }
@@ -131,12 +133,11 @@ tasks {
         // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(
-            properties("pluginVersion").map {
-                listOf(
-                    it.split('-').getOrElse(1) { "default" }.split('.').first(),
-                )
-            },
-        )
+        val provider = properties("pluginVersion").map {
+            listOf(
+                it.split('-').getOrElse(1) { "default" }.split('.').first(),
+            )
+        }
+        channels.set(provider)
     }
 }
