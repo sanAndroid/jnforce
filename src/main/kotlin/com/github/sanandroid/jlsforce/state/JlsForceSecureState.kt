@@ -37,28 +37,28 @@ class JlsForceSecureState {
             safe.set(credentialAttributes, credential)
         }
 
-    var password: String?
-        get() {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.username)
-            val credential = safe.get(credentialAttributes)
-            return credential?.password?.toString()
-        }
-        set(newPassword) {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.username)
-            val credential = Credentials(jlsForceState.username, newPassword)
-            safe.set(credentialAttributes, credential)
-        }
-    var securityToken: String?
-        get() {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.username + "_token")
-            val credential = safe.get(credentialAttributes)
-            return credential?.password?.toString()
-        }
-        set(newToken) {
-            val credentialAttributes = createCredentialAttributes(jlsForceState.username + "_token")
-            val credential = Credentials(jlsForceState.username + "_token", newToken)
-            safe.set(credentialAttributes, credential)
-        }
+    // var password: String?
+    //     get() {
+    //         val credentialAttributes = createCredentialAttributes(jlsForceState.username)
+    //         val credential = safe.get(credentialAttributes)
+    //         return credential?.password?.toString()
+    //     }
+    //     set(newPassword) {
+    //         val credentialAttributes = createCredentialAttributes(jlsForceState.username)
+    //         val credential = Credentials(jlsForceState.username, newPassword)
+    //         safe.set(credentialAttributes, credential)
+    //     }
+    // var securityToken: String?
+    //     get() {
+    //         val credentialAttributes = createCredentialAttributes(jlsForceState.username + "_token")
+    //         val credential = safe.get(credentialAttributes)
+    //         return credential?.password?.toString()
+    //     }
+    //     set(newToken) {
+    //         val credentialAttributes = createCredentialAttributes(jlsForceState.username + "_token")
+    //         val credential = Credentials(jlsForceState.username + "_token", newToken)
+    //         safe.set(credentialAttributes, credential)
+    //     }
 
     private fun createCredentialAttributes(key: String): CredentialAttributes {
         val serviceName = generateServiceName("com.github.sanandroid.jlsforce.settings.JlsForceState", key)

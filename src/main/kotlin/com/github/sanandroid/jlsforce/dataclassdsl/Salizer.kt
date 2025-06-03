@@ -12,7 +12,7 @@ class Salizer {
 
     fun dataClassFromJsonForJackson(jsonString: String, packageName: String): String {
         val jsonMap = Json.parseToJsonElement(jsonString).jsonObject.toMap()
-        val fields = (jsonMap["fields"] as JsonArray)
+        val fields = (jsonMap["fields"] as JsonArray) //TODO this unsafe
         val className = (jsonMap["name"] as JsonPrimitive).content.qualify()
 
         val dataClass = dataClass {

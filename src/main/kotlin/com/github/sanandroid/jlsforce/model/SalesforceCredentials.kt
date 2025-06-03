@@ -4,9 +4,9 @@ package com.github.sanandroid.jlsforce.model
 
 data class SalesforceCredentials(
     val instanceUrl: String,
-    val username: String,
-    val password: String,
-    val securityToken: String,
+    // val username: String,
+    // val password: String,
+    // val securityToken: String,
     val clientId: String,
     val clientSecret: String,
 )

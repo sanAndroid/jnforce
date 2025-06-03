@@ -24,7 +24,7 @@ class JlsForceState : PersistentStateComponent<JlsForceState?> {
     override fun loadState(state: JlsForceState) =
         XmlSerializerUtil.copyBean(state, this)
 
-    var username = ""
+    // var username = ""
     var clientId = ""
 
     var baseUrl = ""

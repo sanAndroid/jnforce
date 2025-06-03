@@ -58,14 +58,14 @@ class SalesforceService(
         val (jlsForceState, jlsForceSecureState, packagePath) = getJlsForceState()
         File(packagePath).mkdirs()
         copyAddressAndLocation(jlsForceState, packagePath)
-        val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
-            text = "Getting salesforce objects"
-        }
+        // val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
+        //     text = "Getting salesforce objects"
+        // }
         token = getToken(jlsForceState, jlsForceSecureState)
         if (jlsForceState.useClassFilters) {
-            importSObjectsByFilter(progressIndicator, jlsForceState, packagePath, token)
+            importSObjectsByFilter(null, jlsForceState, packagePath, token)
         }
-        importSObjectsByList(progressIndicator, jlsForceState, packagePath, token)
+        importSObjectsByList(null, jlsForceState, packagePath, token)
     }
 
     private fun copyAddressAndLocation(jlsForceState: JlsForceState, packagePath: String) {
@@ -77,7 +77,7 @@ class SalesforceService(
     }
 
     private fun importSObjectsByList(
-        progressIndicator: ProgressIndicator,
+        progressIndicator: ProgressIndicator?,
         jlsForceState: JlsForceState,
         packagePath: String,
         token: String,
@@ -85,13 +85,13 @@ class SalesforceService(
         val objectList = jlsForceState.classList.split(",", ";").map { it.trim() }
         objectList.forEachIndexed { index, className ->
             createDataclass(className, jlsForceState, packagePath, token)
-            progressIndicator.fraction = index.toDouble() / objectList.size
-            progressIndicator.text2 = "$index of ${objectList.size}"
+            // progressIndicator.fraction = index.toDouble() / objectList.size
+            // progressIndicator.text2 = "$index of ${objectList.size}"
         }
     }
 
     private fun importSObjectsByFilter(
-        progressIndicator: ProgressIndicator,
+        progressIndicator: ProgressIndicator?,
         jlsForceState: JlsForceState,
         packagePath: String,
         token: String,
@@ -101,19 +101,20 @@ class SalesforceService(
         fields.forEachIndexed { index, sObject ->
             sObject as JsonObject
 
-            if (progressIndicator.isCanceled) return
+            // if (progressIndicator.isCanceled) return
 
             val className = (sObject["name"] as JsonPrimitive).content
-            if (evalulateFilters(sObject, jlsForceState)) {
+            val evalulateFilters = evalulateFilters(sObject, jlsForceState)
+            if (evalulateFilters) {
                 createDataclass(className, jlsForceState, packagePath, token)
             }
 
-            progressIndicator.fraction = index.toDouble() / numberOfFields
-            progressIndicator.text2 = "$index of $numberOfFields"
+            // progressIndicator.fraction = index.toDouble() / numberOfFields
+            // progressIndicator.text2 = "$index of $numberOfFields"
         }
     }
 
-    private fun evalulateFilters(sObject: JsonObject, jlsForceState: JlsForceState) =
+    private fun evalulateFilters(sObject: JsonObject, jlsForceState: JlsForceState) = true ||
         sObject.getFilterFlag(filter = jlsForceState.filterCustom, name = CUSTOM) &&
             sObject.getFilterFlag(filter = jlsForceState.filterCreatable, name = CREATEABLE) &&
             sObject.getFilterFlag(filter = jlsForceState.filterDeletable, name = DELETABLE) &&
@@ -160,7 +161,7 @@ class SalesforceService(
     private fun createDataclass(sObject: String, jlsForceState: JlsForceState, packagePath: String, token: String) {
         val packageName = getPackageName(jlsForceState, packagePath)
         val requestBuilder = HttpRequest.newBuilder()
-            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject/describe".useFS()))
+            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject".useFS()))
             .header("Authorization", "Bearer $token")
             .GET()
         // val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
@@ -191,7 +192,7 @@ class SalesforceService(
     ).let { "$it\n" }
 
     private fun getToken(jlsForceState: JlsForceState, jlsForceSecureState: JlsForceSecureState): String {
-        val request = getTokenRequestBuilder(jlsForceState, jlsForceSecureState)
+        val request = getTokenRequest(jlsForceState, jlsForceSecureState)
 
         val salesforceResponse = makeApiRequest(request,
             { response ->
@@ -214,10 +215,8 @@ class SalesforceService(
         .header("Content-Type", "application/x-www-form-urlencoded")
         .POST(
             HttpRequest.BodyPublishers.ofString(
-                "grant_type=password&client_id=${jlsForceState.clientId}" +
-                    "&client_secret=${jlsForceSecureState.clientSecret}&" +
-                    "username=${jlsForceState.username}&" +
-                    "password=${jlsForceSecureState.password}${jlsForceSecureState.securityToken}",
+                "grant_type=client_credentials&client_id=${jlsForceState.clientId}" +
+                    "&client_secret=${jlsForceSecureState.clientSecret}"
             ),
         )
 
@@ -241,7 +240,7 @@ class SalesforceService(
         onError: (HttpResponse<String>) -> SalesforceResponse.Error<T>,
         requestBuilder: HttpRequest.Builder
     ): SalesforceResponse<T> {
-        val tokenRequest = getTokenRequestBuilder(getJlsForceState().first, getJlsForceState().second)
+        val tokenRequest = getTokenRequest(getJlsForceState().first, getJlsForceState().second)
         client.send(tokenRequest.build(), HttpResponse.BodyHandlers.ofString()).let { tokenResponse ->
             if (tokenResponse.statusCode() !in 200..299)
                 return onError(tokenResponse)
@@ -254,11 +253,6 @@ class SalesforceService(
             return onSuccess(secondResponse)
         return onError(secondResponse)
     }
-
-    private fun getTokenRequestBuilder(
-        jlsForceState: JlsForceState,
-        jlsForceSecureState: JlsForceSecureState
-    ) = getTokenRequest(jlsForceState, jlsForceSecureState)
 
     private fun <T> defaultErrorHandler() = { response: HttpResponse<String> ->
         val content = "Error communication with Salesforce: ${response.statusCode()}\n${response.body()}"

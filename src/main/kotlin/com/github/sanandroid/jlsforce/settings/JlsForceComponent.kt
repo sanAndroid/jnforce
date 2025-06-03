@@ -138,12 +138,12 @@ class JlsForceComponent {
     internal fun buildPanel() {
         panel = JPanel().apply {
             layout = GridLayout(0, 1)
-            add(JBLabel("User name: "))
-            add(myUsernameText)
-            add(JBLabel("Password"))
-            add(myPasswordText)
-            add (JBLabel("Security Token"))
-            add(mySecurityTokenText)
+            // add(JBLabel("User name: "))
+            // add(myUsernameText)
+            // add(JBLabel("Password"))
+            // add(myPasswordText)
+            // add (JBLabel("Security Token"))
+            // add(mySecurityTokenText)
             add(JBLabel("ClientId"))
             add(myClientIdText)
             add(JBLabel("ClientSecret"))
