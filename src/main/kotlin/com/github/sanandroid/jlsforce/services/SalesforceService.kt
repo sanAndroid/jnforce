@@ -20,7 +20,7 @@ import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressIndicatorProvider
 import com.intellij.openapi.project.Project
@@ -51,21 +51,21 @@ class SalesforceService(
         private val client: HttpClient = HttpClient.newHttpClient()
         private val objectMapperWrapper = ObjectMapper()
         var token = ""
-        private val logger = logger<SalesforceService>()
+        private val logger = Logger.getInstance(SalesforceService::class.java)
     }
 
     override fun run() {
         val (jlsForceState, jlsForceSecureState, packagePath) = getJlsForceState()
         File(packagePath).mkdirs()
         copyAddressAndLocation(jlsForceState, packagePath)
-        // val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
-        //     text = "Getting salesforce objects"
-        // }
+        val progressIndicator: ProgressIndicator = ProgressIndicatorProvider.getInstance().progressIndicator.apply {
+            text = "Getting salesforce objects"
+        }
         token = getToken(jlsForceState, jlsForceSecureState)
         if (jlsForceState.useClassFilters) {
-            importSObjectsByFilter(null, jlsForceState, packagePath, token)
+            importSObjectsByFilter(progressIndicator, jlsForceState, packagePath, token)
         }
-        importSObjectsByList(null, jlsForceState, packagePath, token)
+        importSObjectsByList(progressIndicator, jlsForceState, packagePath, token)
     }
 
     private fun copyAddressAndLocation(jlsForceState: JlsForceState, packagePath: String) {
@@ -77,7 +77,7 @@ class SalesforceService(
     }
 
     private fun importSObjectsByList(
-        progressIndicator: ProgressIndicator?,
+        progressIndicator: ProgressIndicator,
         jlsForceState: JlsForceState,
         packagePath: String,
         token: String,
@@ -85,13 +85,13 @@ class SalesforceService(
         val objectList = jlsForceState.classList.split(",", ";").map { it.trim() }
         objectList.forEachIndexed { index, className ->
             createDataclass(className, jlsForceState, packagePath, token)
-            // progressIndicator.fraction = index.toDouble() / objectList.size
-            // progressIndicator.text2 = "$index of ${objectList.size}"
+            progressIndicator.fraction = index.toDouble() / objectList.size
+            progressIndicator.text2 = "$index of ${objectList.size}"
         }
     }
 
     private fun importSObjectsByFilter(
-        progressIndicator: ProgressIndicator?,
+        progressIndicator: ProgressIndicator,
         jlsForceState: JlsForceState,
         packagePath: String,
         token: String,
@@ -101,20 +101,20 @@ class SalesforceService(
         fields.forEachIndexed { index, sObject ->
             sObject as JsonObject
 
-            // if (progressIndicator.isCanceled) return
+            if (progressIndicator.isCanceled) return
 
             val className = (sObject["name"] as JsonPrimitive).content
-            val evalulateFilters = evalulateFilters(sObject, jlsForceState)
-            if (evalulateFilters) {
+            val evaluateFilters = evaluateFilters(sObject, jlsForceState)
+            if (evaluateFilters) {
                 createDataclass(className, jlsForceState, packagePath, token)
             }
 
-            // progressIndicator.fraction = index.toDouble() / numberOfFields
-            // progressIndicator.text2 = "$index of $numberOfFields"
+            progressIndicator.fraction = index.toDouble() / numberOfFields
+            progressIndicator.text2 = "$index of $numberOfFields"
         }
     }
 
-    private fun evalulateFilters(sObject: JsonObject, jlsForceState: JlsForceState) = true ||
+    private fun evaluateFilters(sObject: JsonObject, jlsForceState: JlsForceState) =
         sObject.getFilterFlag(filter = jlsForceState.filterCustom, name = CUSTOM) &&
             sObject.getFilterFlag(filter = jlsForceState.filterCreatable, name = CREATEABLE) &&
             sObject.getFilterFlag(filter = jlsForceState.filterDeletable, name = DELETABLE) &&

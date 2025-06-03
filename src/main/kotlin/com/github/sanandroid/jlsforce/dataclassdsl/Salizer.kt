@@ -2,6 +2,7 @@ package com.github.sanandroid.jlsforce.dataclassdsl
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
@@ -12,7 +13,8 @@ class Salizer {
 
     fun dataClassFromJsonForJackson(jsonString: String, packageName: String): String {
         val jsonMap = Json.parseToJsonElement(jsonString).jsonObject.toMap()
-        val fields = (jsonMap["fields"] as JsonArray) //TODO this unsafe
+        // val describe = (jsonMap["objectDescribe"] as Map<String, JsonElement>)
+        val fields = jsonMap["objectDescribe"] as Map<String, JsonElement>
         val className = (jsonMap["name"] as JsonPrimitive).content.qualify()
 
         val dataClass = dataClass {
@@ -39,7 +41,7 @@ class Salizer {
         return dataClass
     }
 
-    private fun ParametersBuilder.buildParameters(fields: JsonArray) {
+    private fun ParametersBuilder.buildParameters(fields: Map<String, JsonElement>) {
         fields.forEach { field ->
             field as JsonObject
 
