@@ -42,7 +42,7 @@ class Salizer {
     private fun ParametersBuilder.buildParameters(fields: JsonArray) {
 
         fields.forEach { field ->
-            @Suppress("Unchecked Cast")
+            @Suppress("UNCHECKED_CAST")
             field as Map<String, JsonElement>
             val jsonName = (field["name"] as JsonPrimitive).content
             val variableName = jsonName.replaceFirstChar { char -> char.lowercase() }.qualify()
