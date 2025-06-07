@@ -1,4 +1,4 @@
-package com.github.sanandroid.jnforce.model
+package com.github.sanandroid.jnforce.dataclassdsl
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -38,7 +38,7 @@ data class AllField(
     @JsonProperty("Checkbox__c")
     var checkbox: Boolean,
     @JsonProperty("Currency__c")
-    var currency: String? = null,
+    var currency: Double? = null,
     @JsonProperty("Date__c")
     var date: String? = null,
     @JsonProperty("Date_Time__c")
@@ -46,15 +46,15 @@ data class AllField(
     @JsonProperty("Email__c")
     var email: String? = null,
     @JsonProperty("GeoLocation__Latitude__s")
-    var geoLocationLatitudes: Double? = null,
+    var geoLocationLatitude: Double? = null,
     @JsonProperty("GeoLocation__Longitude__s")
-    var geoLocationLongitudes: Double? = null,
+    var geoLocationLongitude: Double? = null,
     @JsonProperty("GeoLocation__c")
-    val geoLocation: String? = null,
+    val geoLocation: Location? = null,
     @JsonProperty("Number__c")
     var number: Double? = null,
     @JsonProperty("Percent__c")
-    var percent: String? = null,
+    var percent: Double? = null,
     @JsonProperty("Phone__c")
     var phone: String? = null,
     @JsonProperty("Picklist__c")
@@ -74,27 +74,27 @@ data class AllField(
     @JsonProperty("URL__c")
     var uRL: String? = null,
     @JsonProperty("Address__Street__s")
-    var addressStreets: String? = null,
+    var addressStreet: String? = null,
     @JsonProperty("Address__City__s")
-    var addressCitys: String? = null,
+    var addressCity: String? = null,
     @JsonProperty("Address__PostalCode__s")
-    var addressPostalCodes: String? = null,
+    var addressPostalCode: String? = null,
     @JsonProperty("Address__StateCode__s")
-    var addressStateCodes: String? = null,
+    var addressStateCode: String? = null,
     @JsonProperty("Address__CountryCode__s")
-    var addressCountryCodes: String? = null,
+    var addressCountryCode: String? = null,
     @JsonProperty("Address__Latitude__s")
-    var addressLatitudes: Double? = null,
+    var addressLatitude: Double? = null,
     @JsonProperty("Address__Longitude__s")
-    var addressLongitudes: Double? = null,
+    var addressLongitude: Double? = null,
     @JsonProperty("Address__GeocodeAccuracy__s")
-    var addressGeocodeAccuracys: String? = null,
+    var addressGeocodeAccuracy: String? = null,
     @JsonProperty("Address__c")
     val address: Address? = null,
     @JsonProperty("MinuteLocation__Latitude__s")
-    var minuteLocationLatitudes: Double? = null,
+    var minuteLocationLatitude: Double? = null,
     @JsonProperty("MinuteLocation__Longitude__s")
-    var minuteLocationLongitudes: Double? = null,
+    var minuteLocationLongitude: Double? = null,
     @JsonProperty("MinuteLocation__c")
-    val minuteLocation: String? = null,
+    val minuteLocation: Location? = null,
 )

@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.sanandroid.jlsforce</id>
+    <id>com.github.sanandroid.jnforce</id>
     <name>JlsForce Template</name>
     <vendor>sanandroid</vendor>
 
@@ -12,16 +12,16 @@
     <extensions defaultExtensionNs="com.intellij">
 <!--        <notificationGroup id="Error communication with Salesforce"-->
 <!--                           displayType="STICKY_BALLOON"-->
-<!--                           key="com.github.sanandroid.jlsforce.services"/>-->
+<!--                           key="com.github.sanandroid.jnforce.services"/>-->
     </extensions>
 
     <applicationListeners>
-        <!-- <listener class="com.github.sanandroid.jlsforce.listeners.MyFrameStateListener"
+        <!-- <listener class="com.github.sanandroid.jnforce.listeners.MyFrameStateListener"
                   topic="com.intellij.ide.FrameStateListener"/> -->
     </applicationListeners>
     <actions>
-        <action id="com.github.sanandroid.jlsforce.actions.ImportSalesforceDataClasses"
-                class="com.github.sanandroid.jlsforce.actions.ImportSalesforceDataClasses"
+        <action id="com.github.sanandroid.jnforce.actions.ImportSalesforceDataClasses"
+                class="com.github.sanandroid.jnforce.actions.ImportSalesforceDataClasses"
                 text="Import Salesforce Dataclasses"
                 description="Convert salesforce object metadata into a a Kotlin dataclass">
             <keyboard-shortcut
@@ -33,11 +33,11 @@
     </actions>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-            serviceImplementation="com.github.sanandroid.jlsforce.state.JlsForceState"/>
+            serviceImplementation="com.github.sanandroid.jnforce.state.JnForceState"/>
         <applicationConfigurable
             parentId="tools"
-            instance="com.github.sanandroid.jlsforce.settings.JlsForceConfigurable"
-            id="com.github.sanandroid.jlsforce.settings.JlsForceConfigurable"
+            instance="com.github.sanandroid.jnforce.settings.JlsForceConfigurable"
+            id="com.github.sanandroid.jnforce.settings.JlsForceConfigurable"
             displayName="JlsForce Settings"/>
     </extensions>
 </idea-plugin>

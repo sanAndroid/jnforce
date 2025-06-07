@@ -1,1 +1,1 @@
-rootProject.name = "JlsForce"
+rootProject.name = "JnForce"
