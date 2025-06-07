@@ -15,7 +15,7 @@ class Salizer {
         val jsonMap = Json.parseToJsonElement(jsonString).jsonObject.toMap()
         // val describe = (jsonMap["objectDescribe"] as Map<String, JsonElement>)
         val fields = jsonMap["objectDescribe"] as Map<String, JsonElement>
-        val className = (jsonMap["name"] as JsonPrimitive).content.qualify()
+        val className = (fields["name"] as JsonPrimitive).content.qualify()
 
         val dataClass = dataClass {
             packageName { packageName }
