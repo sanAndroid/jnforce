@@ -3,7 +3,6 @@ package com.github.sanandroid.jlsforce.dataclassdsl
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
 import me.campos.corp.jlsforce.model.toKotlinType
@@ -14,8 +13,7 @@ class Salizer {
     fun dataClassFromJsonForJackson(jsonString: String, packageName: String): String {
         val jsonMap = Json.parseToJsonElement(jsonString).jsonObject.toMap()
         // val describe = (jsonMap["objectDescribe"] as Map<String, JsonElement>)
-        val fields = jsonMap["objectDescribe"] as Map<String, JsonElement>
-        val className = (fields["name"] as JsonPrimitive).content.qualify()
+        val className = (jsonMap["name"] as JsonPrimitive).content.qualify()
 
         val dataClass = dataClass {
             packageName { packageName }
@@ -36,15 +34,16 @@ class Salizer {
                 annotation { "@JsonInclude(JsonInclude.Include.NON_NULL)" }
                 annotation { "@JsonIgnoreProperties(ignoreUnknown = true)" }
             }
-            parameters { buildParameters(fields) }
+            parameters { buildParameters(jsonMap["fields"] as JsonArray) }
         }.build()
         return dataClass
     }
 
-    private fun ParametersBuilder.buildParameters(fields: Map<String, JsonElement>) {
-        fields.forEach { field ->
-            field as JsonObject
+    private fun ParametersBuilder.buildParameters(fields: JsonArray) {
 
+        fields.forEach { field ->
+            @Suppress("Unchecked Cast")
+            field as Map<String, JsonElement>
             val jsonName = (field["name"] as JsonPrimitive).content
             val variableName = jsonName.replaceFirstChar { char -> char.lowercase() }.qualify()
             val type = (field["type"] as JsonPrimitive).content.uppercase().toKotlinType()

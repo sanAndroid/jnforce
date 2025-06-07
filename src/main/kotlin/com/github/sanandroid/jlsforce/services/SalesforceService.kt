@@ -161,7 +161,7 @@ class SalesforceService(
     private fun createDataclass(sObject: String, jlsForceState: JlsForceState, packagePath: String, token: String) {
         val packageName = getPackageName(jlsForceState, packagePath)
         val requestBuilder = HttpRequest.newBuilder()
-            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject".useFS()))
+            .uri(URI.create("${jlsForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject/describe".useFS()))
             .header("Authorization", "Bearer $token")
             .GET()
         // val responseAsString = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
