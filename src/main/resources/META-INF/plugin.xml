@@ -22,8 +22,7 @@
     <actions>
         <action id="com.github.sanandroid.jnforce.actions.ImportSalesforceDataClasses"
                 class="com.github.sanandroid.jnforce.actions.ImportSalesforceDataClasses"
-                text="Import Salesforce Dataclasses"
-                description="Convert salesforce object metadata into a a Kotlin dataclass">
+        >
             <keyboard-shortcut
                 keymap="$default"
                 first-keystroke="control alt A"
@@ -34,10 +33,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
             serviceImplementation="com.github.sanandroid.jnforce.state.JnForceState"/>
+        <!--suppress PluginXmlI18n -->
         <applicationConfigurable
             parentId="tools"
             instance="com.github.sanandroid.jnforce.settings.JlsForceConfigurable"
             id="com.github.sanandroid.jnforce.settings.JlsForceConfigurable"
-            displayName="JlsForce Settings"/>
+            displayName="JnForce Settings"/>
     </extensions>
 </idea-plugin>

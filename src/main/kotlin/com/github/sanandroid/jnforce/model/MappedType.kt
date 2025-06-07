@@ -13,22 +13,39 @@ enum class MappedType(val type: String) {
     INT("Int"),
     LONG("Long"),
     DOUBLE("Double"),
+    @Suppress("UNUSED")
     DATE("Date"),
+    @Suppress("UNUSED")
     DATETIME("Datetime"), // --> Test
+    @Suppress("UNUSED")
     BASE64("Base64"),
+    @Suppress("UNUSED")
     ID("ID"),
+    @Suppress("UNUSED")
     REFERENCE("Reference"),
+    @Suppress("UNUSED")
     CURRENCY("Currency"),
+    @Suppress("UNUSED")
     TEXTAREA("Textarea"),
+    @Suppress("UNUSED")
     PERCENT("Percentage"),
+    @Suppress("UNUSED")
     PHONE("Phone"),
+    @Suppress("UNUSED")
     URL("Url"),
+    @Suppress("UNUSED")
     EMAIL("Email"),
+    @Suppress("UNUSED")
     COMBOBOX("Combobox"),
+    @Suppress("UNUSED")
     PICKLIST("Picklists"),
+    @Suppress("UNUSED")
     MULTIPICKLIST("Multipicklist"),
+    @Suppress("UNUSED")
     ANYTYPE("Anytype"),
+    @Suppress("UNUSED")
     LOCATION("Location"), // Also Geolocation could be in Grade, Minute Second or Decimal so check this
+    @Suppress("UNUSED")
     NUMBER("Number"), // BigDecimal or BigInteger??
     ;
 

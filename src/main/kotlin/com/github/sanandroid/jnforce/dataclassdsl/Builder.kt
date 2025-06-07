@@ -38,6 +38,7 @@ class AnnotationsBuilder : ElementsBuilder() {
 }
 
 class ModifiersBuilder : ElementsBuilder() {
+    @Suppress("UNUSED")
     fun modifier(elementBuilder: Builder<String>.() -> String) = super.addElement(elementBuilder)
     override fun build(): String = if (isEmpty()) "" else joinToString(" ")
 }

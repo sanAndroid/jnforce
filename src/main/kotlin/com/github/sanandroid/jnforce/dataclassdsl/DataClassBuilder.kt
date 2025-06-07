@@ -23,6 +23,7 @@ class DataClassBuilder {
     fun annotations(lambda: AnnotationsBuilder.() -> Unit) = annotationsBuilder.apply(lambda)
 
     private val modifiersBuilder = ModifiersBuilder()
+    @Suppress("UNUSED")
     fun modifiers(lambda: ModifiersBuilder.() -> Unit) = modifiersBuilder.apply(lambda)
 
     private val className = Builder<String>()

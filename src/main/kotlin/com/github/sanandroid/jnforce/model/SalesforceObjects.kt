@@ -1,49 +1,49 @@
 package me.campos.corp.jnforce.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
+// import com.fasterxml.jackson.annotation.JsonProperty
 import com.intellij.openapi.diagnostic.thisLogger
 
-data class SObjectMetaDataDto(
-    @JsonProperty("fields")
-    val fields: List<FieldDto>,
-)
+// data class SObjectMetaDataDto(
+//     @JsonProperty("fields")
+//     val fields: List<FieldDto>,
+// )
+//
+// data class SObjectRecordsDto(
+//     @JsonProperty("records")
+//     val records: List<SObjectRecordDto>,
+// )
 
-data class SObjectRecordsDto(
-    @JsonProperty("records")
-    val records: List<SObjectRecordDto>,
-)
+// data class SObjectRecordDto(
+//     @JsonProperty("Id")
+//     val id: String,
+//     @JsonProperty("Name")
+//     val name: String,
+// )
 
-data class SObjectRecordDto(
-    @JsonProperty("Id")
-    val id: String,
-    @JsonProperty("Name")
-    val name: String,
-)
+// abstract class AbtractSalesforceError(
+//     open val message: String,
+//     open val errorCode: String,
+// )
 
-abstract class AbtractSalesforceError(
-    open val message: String,
-    open val errorCode: String,
-)
+// data class SalesforceMetadataError(
+//     override val message: String = "No Error Message provided",
+//     override val errorCode: String = "No Error Code provided",
+//     val fields: List<String> = listOf(),
+// ) : AbtractSalesforceError(message, errorCode)
+//
+// data class SalesforceRecordsError(
+//     override val message: String = "No Error Message provided",
+//     override val errorCode: String = "No Error Code provided",
+//     val records: List<SObjectRecordDto> = listOf(),
+// ) : AbtractSalesforceError(message, errorCode)
 
-data class SalesforceMetadataError(
-    override val message: String = "No Error Message provided",
-    override val errorCode: String = "No Error Code provided",
-    val fields: List<String> = listOf(),
-) : AbtractSalesforceError(message, errorCode)
-
-data class SalesforceRecordsError(
-    override val message: String = "No Error Message provided",
-    override val errorCode: String = "No Error Code provided",
-    val records: List<SObjectRecordDto> = listOf(),
-) : AbtractSalesforceError(message, errorCode)
-
-data class FieldDto(
-    val label: String?,
-    val name: String,
-    val createable: Boolean?,
-    val type: SalesforceType,
-    val nillable: Boolean,
-)
+// data class FieldDto(
+//     val label: String?,
+//     val name: String,
+//     val createable: Boolean?,
+//     val type: SalesforceType,
+//     val nillable: Boolean,
+// )
 
 /**
  * Where did I get this list? It would be nice to populate that via api.
@@ -97,6 +97,5 @@ fun String.toKotlinType() = when (savelyToSalesforceType()) {
     SalesforceType.LONG -> MappedType.LONG
     SalesforceType.ADDRESS -> MappedType.ADDRESS
     SalesforceType.LOCATION -> MappedType.LOCATION
-    SalesforceType.LONG -> MappedType.LONG
     else -> MappedType.STRING
 }

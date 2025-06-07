@@ -10,15 +10,12 @@ import org.jetbrains.annotations.NotNull
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
-import javax.swing.ButtonGroup
 import javax.swing.JComponent
 import javax.swing.JPanel
 
 const val USERNAME = "username"
-const val PASSWORD = "password"
 const val CLIENT_ID = "clientId"
 const val CLIENT_SECRET = "clientSecret"
-const val SECURITY_TOKEN = "securityToken"
 const val BASE_URL = "baseUrl"
 const val PACKAGE_NAME = "packageName"
 const val CLASS_PATH = "classPath"
@@ -102,14 +99,8 @@ class JlsForceComponent {
         isVisible = false
     }
 
-    private val myPasswordText = JBPasswordField().apply {
-        name = PASSWORD
-    }
     private val myClientSecretText = JBPasswordField().apply {
         name = CLIENT_SECRET
-    }
-    private val mySecurityTokenText = JBPasswordField().apply {
-        name = SECURITY_TOKEN
     }
     private val myUseClassFiltersButton = JBRadioButton("Use filters").apply {
         name = USE_CLASS_FILTERS
@@ -126,10 +117,12 @@ class JlsForceComponent {
         isVisible = false
     }
 
-    private val myUseClassListButtonGroup = ButtonGroup().apply {
-        add(myUseClassFiltersButton)
-        add(myUseClassListButton)
-    }
+    // TODO this should be active an usable
+
+    // private val myUseClassListButtonGroup = ButtonGroup().apply {
+    //     add(myUseClassFiltersButton)
+    //     add(myUseClassListButton)
+    // }
 
     init {
         buildPanel()

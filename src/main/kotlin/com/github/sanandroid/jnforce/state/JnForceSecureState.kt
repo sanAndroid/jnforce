@@ -15,12 +15,13 @@ import org.jetbrains.annotations.Nullable
  * The [State] and [Storage] annotations define the name of the data and the file name where
  * these persistent application settings are stored.
  */
-@Service(Service.Level.PROJECT)
+@Service(Service.Level.APP)
 class JnForceSecureState {
 
     val safe = PasswordSafe.instance
 
     @Nullable
+    @Suppress("UNUSED")
     fun getState() = this
 
     private val jnForceState = JnForceState.instance
@@ -67,6 +68,6 @@ class JnForceSecureState {
 
     companion object {
         val instance: JnForceSecureState
-            get() = ApplicationManager.getApplication().getService(JnForceSecureState::class.java)
+            get () = ApplicationManager.getApplication().getService(JnForceSecureState::class.java)
     }
 }
