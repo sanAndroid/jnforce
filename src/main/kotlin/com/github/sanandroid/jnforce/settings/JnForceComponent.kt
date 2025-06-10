@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
+import javax.swing.ButtonGroup
 import javax.swing.JComponent
 import javax.swing.JPanel
 
@@ -102,7 +103,7 @@ class JnForceComponent {
     private val myClientSecretText = JBPasswordField().apply {
         name = CLIENT_SECRET
     }
-    private val myUseClassFiltersButton = JBRadioButton("Use filters").apply {
+    private val myUseClassFiltersButton = JBRadioButton("Use filters", false).apply {
         name = USE_CLASS_FILTERS
         action = UseClassFilterAction()
     }
@@ -118,18 +119,17 @@ class JnForceComponent {
     }
 
     init {
+        ButtonGroup().apply {
+            add(myUseClassFiltersButton)
+            add(myUseClassListButton)
+        }
         buildPanel()
     }
 
     internal fun buildPanel() {
+
         panel = JPanel().apply {
             layout = GridLayout(0, 1)
-            // add(JBLabel("User name: "))
-            // add(myUsernameText)
-            // add(JBLabel("Password"))
-            // add(myPasswordText)
-            // add (JBLabel("Security Token"))
-            // add(mySecurityTokenText)
             add(JBLabel("ClientId"))
             add(myClientIdText)
             add(JBLabel("ClientSecret"))
