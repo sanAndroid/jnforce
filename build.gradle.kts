@@ -31,12 +31,12 @@ repositories {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(11)
 }
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
