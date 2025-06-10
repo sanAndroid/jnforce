@@ -36,8 +36,8 @@
         <!--suppress PluginXmlI18n -->
         <applicationConfigurable
             parentId="tools"
-            instance="com.github.sanandroid.jnforce.settings.JlsForceConfigurable"
-            id="com.github.sanandroid.jnforce.settings.JlsForceConfigurable"
+            instance="com.github.sanandroid.jnforce.settings.JnForceConfigurable"
+            id="com.github.sanandroid.jnforce.settings.JnForceConfigurable"
             displayName="JnForce Settings"/>
     </extensions>
 </idea-plugin>

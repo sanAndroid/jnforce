@@ -1,5 +1,4 @@
 package com.github.sanandroid.jnforce.settings
-
 import com.github.sanandroid.jnforce.state.JnForceSecureState
 import com.github.sanandroid.jnforce.state.JnForceState
 import com.intellij.testFramework.TestDataPath
@@ -11,7 +10,7 @@ import com.intellij.ui.components.JBTextField
 import javax.swing.JPasswordField
 
 @TestDataPath("\$CONTENT_ROOT/src/test/testData")
-class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
+class JnForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
 
     fun testClientIdIsUpdated() {
         correctComponentIsUpdated(CLIENT_ID)
@@ -120,7 +119,7 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         componentName: String,
         setTo: String = componentName,
     ) {
-        val jlsForceConfigurable = JlsForceConfigurable()
+        val jlsForceConfigurable = JnForceConfigurable()
         val panel = jlsForceConfigurable.createComponent()
         when (val jComponent = (panel?.components?.find { it.name == componentName }!!)) {
             is JBCheckBox -> jComponent.isSelected = setTo.toBoolean()
@@ -129,7 +128,6 @@ class JlsForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
             is JBTextField -> jComponent.text = setTo
             is JPasswordField -> {
                 (panel.components?.find { it.name == CLIENT_ID }!! as JBTextField).text = CLIENT_ID
-                (panel.components?.find { it.name == USERNAME }!! as JBTextField).text = USERNAME
                 jComponent.text = setTo
             }
         }

@@ -38,7 +38,7 @@ const val USE_CLASS_FILTERS = "useClassFilters"
  * Supports creating and managing a [JPanel] for the Settings Dialog.
  */
 
-class JlsForceComponent {
+class JnForceComponent {
 
     private lateinit var panel: JPanel
 
@@ -116,13 +116,6 @@ class JlsForceComponent {
         name = CLASS_LIST
         isVisible = false
     }
-
-    // TODO this should be active an usable
-
-    // private val myUseClassListButtonGroup = ButtonGroup().apply {
-    //     add(myUseClassFiltersButton)
-    //     add(myUseClassListButton)
-    // }
 
     init {
         buildPanel()

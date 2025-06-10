@@ -9,8 +9,8 @@ import javax.swing.JComponent
 /**
  * Provides controller functionality for application settings.
  */
-class JlsForceConfigurable : Configurable {
-    private var mySettingsComponent: JlsForceComponent? = null
+class JnForceConfigurable : Configurable {
+    private var mySettingsComponent: JnForceComponent? = null
 
     @Nls(capitalization = Nls.Capitalization.Title)
     override fun getDisplayName(): String {
@@ -22,7 +22,7 @@ class JlsForceConfigurable : Configurable {
     }
 
     override fun createComponent(): JComponent? {
-        mySettingsComponent = JlsForceComponent()
+        mySettingsComponent = JnForceComponent()
         return mySettingsComponent?.getPanel()
     }
 

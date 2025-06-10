@@ -13,7 +13,8 @@ internal class SalizerTest {
     fun leadDataClassFromJsonForJackson() {
         val leadAsJson = readFileDirectlyAsText("src/test/testData/salizer/", "lead_meta.json")
         val leadAsDataclass =
-            readFileDirectlyAsText("src/test/kotlin/com/github/sanandroid/jlsforce/dataclassdsl/", "Lead.kt").replace("\\p{Zs}+".toRegex(), "")
+            readFileDirectlyAsText("src/test/kotlin/com/github/sanandroid/jnforce/dataclassdsl/", "Lead.kt")
+                .replace("\\p{Zs}+".toRegex(), "")
         val uut = Salizer().dataClassFromJsonForJackson(leadAsJson, "com.github.sanandroid.jnforce.dataclassdsl")
             .replace("\\p{Zs}+".toRegex(), "")
         assertEquals(uut, leadAsDataclass)
@@ -25,7 +26,7 @@ internal class SalizerTest {
         val uut = Salizer().dataClassFromJsonForJackson(allFieldsAsJson, "com.github.sanandroid.jnforce.dataclassdsl")
             .replace("\\p{Zs}+".toRegex(), "")
         val leadAsDataclass =
-            readFileDirectlyAsText("src/test/kotlin/com/github/sanandroid/jlsforce/dataclassdsl/", "AllFields.kt").replace("\\p{Zs}+".toRegex(), "")
+            readFileDirectlyAsText("src/test/kotlin/com/github/sanandroid/jnforce/dataclassdsl/", "AllFields.kt").replace("\\p{Zs}+".toRegex(), "")
         assertEquals(uut, leadAsDataclass)
     }
 

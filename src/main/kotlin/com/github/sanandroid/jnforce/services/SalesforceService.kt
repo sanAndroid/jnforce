@@ -267,14 +267,14 @@ class SalesforceService(
     }
 
     private fun getJnForceState() =
-        JnForceState.instance.let { jlsForceState ->
+        JnForceState.instance.let { jnForceState ->
             Triple(
-                jlsForceState,
+                jnForceState,
                 JnForceSecureState.instance,
-                if (jlsForceState.classPath.isNullOrEmpty()) {
+                if (jnForceState.classPath.isNullOrEmpty()) {
                     ProjectRootManager.getInstance(project).contentSourceRoots[0].canonicalPath!! + "/salesforce/".useFS()
                 } else {
-                    "${project.basePath}/src/main/kotlin/${jlsForceState.classPath!!}/"
+                    "${project.basePath}/src/main/kotlin/${jnForceState.classPath!!}/"
                         .replace("//", "/")
                         .replace("\\\\", "\\")
                         .replace("\\s".toRegex(), "")
