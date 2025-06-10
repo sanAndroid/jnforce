@@ -8,7 +8,6 @@ import me.campos.corp.jnforce.model.Location
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Suppress("UNUSED")
 data class Lead(
     @JsonProperty("Id")
     val id: String? = null,
