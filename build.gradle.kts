@@ -10,15 +10,15 @@ plugins {
     // Kotlin support
     // id("org.jetbrains.kotlin.jvm") version "1.8.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.17.3"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "2.0.0"
     // Gradle Qodana Plugin
     id("org.jetbrains.qodana") version "0.1.13"
     // Gradle Kover Plugin
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
-    kotlin("plugin.serialization") version "1.8.10"
-    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.serialization") version "2.1.20"
+    kotlin("jvm") version "2.1.20"
 }
 
 group = properties("pluginGroup").get()
@@ -31,12 +31,12 @@ repositories {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
