@@ -19,10 +19,11 @@
 
 <!-- Plugin description -->
 
-Intellij Idea Plugin that aims to create Kotlin Dataclasses based on the definitions obtained from Salesforce's /describe endpoints. 
-The idea is that these dataclasses can be used to serialize and deserialize data into and from Salesforce.
-
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+JnForce is an IntelliJ IDEA plugin that generates Kotlin data classes based on metadata retrieved from Salesforce’s /sobjects/<type>/describe and /sobjects/describe API endpoints.
+Its primary goal is to simplify the process of serializing and deserializing Salesforce data in Kotlin by creating structured, 
+type-safe representations of Salesforce objects. These generated data classes can be directly used with Jackson to work with REST or Bulk API responses in a clean and maintainable way.
+The plugin is especially useful for developers integrating with Salesforce in Kotlin-based backends, SDKs, or CLI tools, 
+eliminating manual schema translation and keeping local models in sync with Salesforce metadata.
 
 <!-- Plugin description end -->
 
