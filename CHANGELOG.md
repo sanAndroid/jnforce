@@ -2,6 +2,8 @@
 
 # jlsforce Changelog
 
-## [Unreleased]
+## 0.0.1 
 ### Added
-- Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+- Initial version. Supports client credentials authentication to salesforce and creation of dataclasses using filters or
+a list.
+- 
