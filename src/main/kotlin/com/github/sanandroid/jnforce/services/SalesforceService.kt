@@ -64,8 +64,9 @@ class SalesforceService(
         token = getToken(jnForceState, jnForceSecureState)
         if (jnForceState.useClassFilters) {
             importSObjectsByFilter(progressIndicator, jnForceState, packagePath, token)
+        } else {
+            importSObjectsByList(progressIndicator, jnForceState, packagePath, token)
         }
-        importSObjectsByList(progressIndicator, jnForceState, packagePath, token)
     }
 
     private fun copyAddressAndLocation(jnForceState: JnForceState, packagePath: String) {

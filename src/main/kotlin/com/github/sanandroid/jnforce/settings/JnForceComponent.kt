@@ -154,20 +154,24 @@ class JnForceComponent {
             add(myFilterRetrievable)
             add(myFilterSearchable)
             add(myFilterUpdateable)
-            if (myUseClassListButton.isSelected) {
-                myClassListTextField.isVisible = true
-            }
-            if (myUseClassFiltersButton.isSelected) {
-                myFilterCreatable.isVisible = true
-                myFilterCustom.isVisible = true
-                myFilterDeletable.isVisible = true
-                myFilterLayoutable.isVisible = true
-                myFilterMergeable.isVisible = true
-                myFilterReplicateable.isVisible = true
-                myFilterRetrievable.isVisible = true
-                myFilterSearchable.isVisible = true
-                myFilterUpdateable.isVisible = true
-            }
+            filterOrListVisible()
+        }
+    }
+
+    private fun filterOrListVisible() {
+        if (myUseClassListButton.isSelected) {
+            myClassListTextField.isVisible = true
+        }
+        if (myUseClassFiltersButton.isSelected) {
+            myFilterCreatable.isVisible = true
+            myFilterCustom.isVisible = true
+            myFilterDeletable.isVisible = true
+            myFilterLayoutable.isVisible = true
+            myFilterMergeable.isVisible = true
+            myFilterReplicateable.isVisible = true
+            myFilterRetrievable.isVisible = true
+            myFilterSearchable.isVisible = true
+            myFilterUpdateable.isVisible = true
         }
     }
 
@@ -259,11 +263,13 @@ class JnForceComponent {
         get() = myUseClassListButton.isSelected
         set(newStatus) {
             myUseClassListButton.isSelected = newStatus
+            filterOrListVisible()
         }
     var useClassFilters: Boolean
         get() = myUseClassFiltersButton.isSelected
         set(newStatus) {
             myUseClassFiltersButton.isSelected = newStatus
+            filterOrListVisible()
         }
     var classList: String
         get() = myClassListTextField.text
