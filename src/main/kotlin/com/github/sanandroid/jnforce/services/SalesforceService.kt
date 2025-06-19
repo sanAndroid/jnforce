@@ -69,6 +69,12 @@ class SalesforceService(
         }
     }
 
+    fun testConnection(): Boolean = runCatching {
+        val (jnForceState, jnForceSecureState, _ ) = getJnForceState()
+        getToken(jnForceState, jnForceSecureState)
+        true
+    }.getOrDefault(false)
+
     private fun copyAddressAndLocation(jnForceState: JnForceState, packagePath: String) {
         val packageDirective = "package ${getPackageName(jnForceState, packagePath)}"
         val address = packageDirective + ADDRESS_TEMPLATE
@@ -190,12 +196,13 @@ class SalesforceService(
         } else {
             jnForceState.packageName!!.removeSuffix(".").removePrefix(".")
         }
-    ).let { "$it\n" }
+        ).let { "$it\n" }
 
     private fun getToken(jnForceState: JnForceState, jnForceSecureState: JnForceSecureState): String {
         val request = getTokenRequest(jnForceState, jnForceSecureState)
 
-        val salesforceResponse = makeApiRequest(request,
+        val salesforceResponse = makeApiRequest(
+            request,
             { response ->
                 SalesforceResponse
                     .Success(objectMapperWrapper.readTree(response.body()).get("access_token").asText())

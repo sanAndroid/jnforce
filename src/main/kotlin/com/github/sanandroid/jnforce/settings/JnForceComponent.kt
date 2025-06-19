@@ -1,5 +1,9 @@
 package com.github.sanandroid.jnforce.settings
 
+import com.github.sanandroid.jnforce.services.SalesforceService
+import com.intellij.ide.DataManager
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
@@ -10,13 +14,16 @@ import org.jetbrains.annotations.NotNull
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
+import javax.swing.BoxLayout
 import javax.swing.ButtonGroup
+import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
 
 const val USERNAME = "username"
 const val CLIENT_ID = "clientId"
 const val CLIENT_SECRET = "clientSecret"
+const val TEST_CONNECTION = "testconnection"
 const val BASE_URL = "baseUrl"
 const val PACKAGE_NAME = "packageName"
 const val CLASS_PATH = "classPath"
@@ -103,6 +110,12 @@ class JnForceComponent {
     private val myClientSecretText = JBPasswordField().apply {
         name = CLIENT_SECRET
     }
+
+    private val myTestConnection = JButton().apply {
+        name = TEST_CONNECTION
+        action = TestConnectionAction()
+    }
+
     private val myUseClassFiltersButton = JBRadioButton("Use filters", false).apply {
         name = USE_CLASS_FILTERS
         action = UseClassFilterAction()
@@ -140,21 +153,36 @@ class JnForceComponent {
             add(myClassPathText)
             add(JBLabel("Base url"))
             add(myBaseUrlText)
-            add(JBLabel("Use class list"))
-            add(myUseClassListButton)
-            add(JBLabel("Use filter"))
-            add(myUseClassFiltersButton)
-            add(myClassListTextField)
-            add(myFilterCreatable)
-            add(myFilterCustom)
-            add(myFilterDeletable)
-            add(myFilterLayoutable)
-            add(myFilterMergeable)
-            add(myFilterReplicateable)
-            add(myFilterRetrievable)
-            add(myFilterSearchable)
-            add(myFilterUpdateable)
-            filterOrListVisible()
+            add(myTestConnection)
+            JPanel().apply {
+                BoxLayout(this, BoxLayout.X_AXIS)
+                add(JBLabel("Use Class List"))
+                add(myUseClassListButton)
+                add(JBLabel("Use Class Filters"))
+                add(myUseClassFiltersButton)
+                add(myClassListTextField)
+                JPanel().apply {
+                    BoxLayout(this, BoxLayout.X_AXIS)
+                    JPanel().apply {
+                        BoxLayout(this, BoxLayout.Y_AXIS)
+                        add(myUseClassListButton).apply {
+                            add(myFilterCreatable)
+                            add(myFilterCustom)
+                            add(myFilterDeletable)
+                            add(myFilterLayoutable)
+                            add(myFilterMergeable)
+                        }
+                        JPanel().apply {
+                            BoxLayout(this, BoxLayout.Y_AXIS)
+                            add(myFilterReplicateable)
+                            add(myFilterRetrievable)
+                            add(myFilterSearchable)
+                            add(myFilterUpdateable)
+                        }
+                    }
+                }
+                filterOrListVisible()
+            }
         }
     }
 
@@ -276,6 +304,27 @@ class JnForceComponent {
         set(newStatus) {
             myClassListTextField.text = newStatus
         }
+
+    inner class TestConnectionAction : AbstractAction() {
+        override fun actionPerformed(@NotNull e: ActionEvent): Unit = with(panel) {
+            val project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this))
+                ?: throw Exception("Could not obtain project, aborting action TestConnectionAction")
+            val success = SalesforceService.instance(project).testConnection()
+            if (success) {
+                Messages.showInfoMessage(
+                    project,
+                    "Successfully connected to Salesforce.",
+                    "Connection Successful"
+                )
+            } else {
+                Messages.showErrorDialog(
+                    project,
+                    "Authentication failed. Please check your credentials and try again.",
+                    "Connection Failed"
+                )
+            }
+        }
+    }
 
     inner class UseClassFilterAction : AbstractAction() {
         override fun actionPerformed(@NotNull e: ActionEvent) = with(panel) {
