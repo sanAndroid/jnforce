@@ -172,16 +172,16 @@ class JnForceComponent {
                 add(myTestConnection)
             }
             add(mainSettingsPanel)
-            add(Box.createVerticalStrut(20));
+            add(Box.createVerticalStrut(20))
             val lowerPanel = JPanel().apply {
                 border = BorderFactory.createLineBorder(JBColor.GRAY, 1)
                 layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                add(Box.createVerticalStrut(20));
+                add(Box.createVerticalStrut(20))
                 val radioPanel = JPanel().apply {
                     layout = BoxLayout(this, BoxLayout.Y_AXIS)
                     alignmentX = Component.LEFT_ALIGNMENT
                     alignmentY = Component.TOP_ALIGNMENT
-                    size = Dimension(500, 100);
+                    size = Dimension(500, 100)
                     // layout = BoxLayout(this, BoxLayout.Y_AXIS)
                     add(Box.createHorizontalStrut(10))
                     val classList = JPanel().apply {
@@ -211,7 +211,7 @@ class JnForceComponent {
                     add(filtersButton)
                 }
                 add(radioPanel)
-                add(Box.createVerticalStrut(20));
+                add(Box.createVerticalStrut(20))
                 filtersPanel = JPanel().apply {
                     layout = BoxLayout(this, BoxLayout.X_AXIS)
                     layout = BoxLayout(this, BoxLayout.X_AXIS)
@@ -219,31 +219,31 @@ class JnForceComponent {
                     val leftFilterPanel = JPanel().apply {
                         alignmentX = Component.LEFT_ALIGNMENT
                         layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                        add(Box.createVerticalStrut(20));
-                        add(Box.createHorizontalStrut(20));
+                        add(Box.createVerticalStrut(20))
+                        add(Box.createHorizontalStrut(20))
                         add(myClassListTextField).apply {
-                            add(Box.createVerticalStrut(20));
-                            add(Box.createHorizontalStrut(20));
+                            add(Box.createVerticalStrut(20))
+                            add(Box.createHorizontalStrut(20))
                         }
                         add(myFilterCreatable)
                         add(myFilterCustom)
                         add(myFilterDeletable)
                         add(myFilterLayoutable)
                         add(myFilterMergeable)
-                        add(Box.createVerticalStrut(20));
-                        add(Box.createHorizontalStrut(20));
+                        add(Box.createVerticalStrut(20))
+                        add(Box.createHorizontalStrut(20))
                     }
                     val rightFilterPanel = JPanel().apply {
                         alignmentX = Component.LEFT_ALIGNMENT
                         layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                        add(Box.createVerticalStrut(20));
-                        add(Box.createHorizontalStrut(20));
+                        add(Box.createVerticalStrut(20))
+                        add(Box.createHorizontalStrut(20))
                         add(myFilterReplicateable)
                         add(myFilterRetrievable)
                         add(myFilterSearchable)
                         add(myFilterUpdateable)
-                        add(Box.createVerticalStrut(20));
-                        add(Box.createHorizontalStrut(20));
+                        add(Box.createVerticalStrut(20))
+                        add(Box.createHorizontalStrut(20))
                     }
                     add(leftFilterPanel)
                     add(rightFilterPanel)
