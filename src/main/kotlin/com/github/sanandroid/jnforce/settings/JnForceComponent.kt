@@ -2,17 +2,14 @@ package com.github.sanandroid.jnforce.settings
 
 import com.github.sanandroid.jnforce.services.SalesforceService
 import com.intellij.ide.DataManager
-import com.intellij.ide.actions.AboutPopup
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.ui.Messages
-import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
-import com.intellij.util.ui.JBUI
 import org.jetbrains.annotations.NotNull
 import java.awt.Component
 import java.awt.Dimension
@@ -20,14 +17,12 @@ import java.awt.GridBagLayout
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
-import javax.swing.BorderFactory
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.ButtonGroup
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
-import javax.swing.border.EmptyBorder
 
 const val USERNAME = "username"
 const val CLIENT_ID = "clientId"
@@ -59,6 +54,7 @@ class JnForceComponent {
 
     private lateinit var panel: JPanel
     private lateinit var filtersPanel: JPanel
+    private lateinit var classTextFieldPanel: JPanel
 
     private val myUsernameText = JBTextField().apply {
         name = USERNAME
@@ -124,7 +120,7 @@ class JnForceComponent {
     }
 
     private val myTestConnection = JButton("Test Connection").apply {
-        layout = GridBagLayout();
+        layout = GridBagLayout()
         name = TEST_CONNECTION
         preferredSize = Dimension(80, 33)
         add(JBLabel("Test Connection"))
@@ -162,7 +158,6 @@ class JnForceComponent {
             alignmentY = Component.TOP_ALIGNMENT
             val mainSettingsPanel = JPanel().apply {
                 layout = GridLayout(0, 1, 10, 10)
-                // layout = BoxLayout(this, BoxLayout.Y_AXIS)
                 add(JBLabel("ClientId"))
                 add(myClientIdText)
                 add(JBLabel("ClientSecret"))
@@ -200,7 +195,7 @@ class JnForceComponent {
                     })
                 }
                 add(filtersButton)
-                val classTextFieldPanel = JPanel().apply {
+                classTextFieldPanel = JPanel().apply {
                     alignmentX = Component.LEFT_ALIGNMENT
                     add(Box.createVerticalStrut(20))
                     add(Box.createHorizontalStrut(20))
@@ -235,19 +230,37 @@ class JnForceComponent {
                 add(rightFilterPanel)
             }
             add(filtersPanel)
-            filterOrListVisible()
+            filterOrListVisible(this)
         }
     }
 
-    private fun filterOrListVisible() {
-        if (myUseClassListButton.isSelected) {
-            filtersPanel.isVisible = false
+    private fun filterOrListVisible(panel: JPanel) = with(panel) {
+
+        if (myUseClassFiltersButton.isSelected) {
+            myFilterCreatable.isVisible = true
+            myFilterCustom.isVisible = true
+            myFilterDeletable.isVisible = true
+            myFilterMergeable.isVisible = true
+            myFilterLayoutable.isVisible = true
+            myFilterReplicateable.isVisible = true
+            myFilterRetrievable.isVisible = true
+            myFilterSearchable.isVisible = true
+            myFilterUpdateable.isVisible = true
+            myClassListTextField.isVisible = false
+        } else {
+            myFilterCreatable.isVisible = false
+            myFilterCustom.isVisible = false
+            myFilterDeletable.isVisible = false
+            myFilterMergeable.isVisible = false
+            myFilterLayoutable.isVisible = false
+            myFilterReplicateable.isVisible = false
+            myFilterRetrievable.isVisible = false
+            myFilterSearchable.isVisible = false
+            myFilterUpdateable.isVisible = false
             myClassListTextField.isVisible = true
         }
-        if (myUseClassFiltersButton.isSelected) {
-            myClassListTextField.isVisible = false
-            filtersPanel.isVisible = true
-        }
+        revalidate()
+        repaint()
     }
 
     fun getPanel() = panel
@@ -302,6 +315,7 @@ class JnForceComponent {
         set(newStatus) {
             myFilterDeletable.isSelected = newStatus
         }
+
     var filterLayoutable: Boolean
         get() = myFilterLayoutable.isSelected
         set(newStatus) {
@@ -338,13 +352,13 @@ class JnForceComponent {
         get() = myUseClassListButton.isSelected
         set(newStatus) {
             myUseClassListButton.isSelected = newStatus
-            filterOrListVisible()
+            filterOrListVisible(panel)
         }
     var useClassFilters: Boolean
         get() = myUseClassFiltersButton.isSelected
         set(newStatus) {
             myUseClassFiltersButton.isSelected = newStatus
-            filterOrListVisible()
+            filterOrListVisible(panel)
         }
     var classList: String
         get() = myClassListTextField.text
@@ -353,27 +367,29 @@ class JnForceComponent {
         }
 
     inner class TestConnectionAction : AbstractAction() {
+        // TODO: as of now SF credentials are not safed on a per project basis even though that makes sense
+        // and the salesforce service actually needs a project to open
         override fun actionPerformed(@NotNull e: ActionEvent): Unit = with(panel) {
             val project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this))
-
-            project?.let {
-                val success = SalesforceService.instance(project).testConnection()
-                if (success) {
-                    Messages.showInfoMessage(
-                        project, "Successfully connected to Salesforce.", "Connection Successful"
-                    )
-                } else {
-                    Messages.showErrorDialog(
-                        project,
-                        "Authentication failed. Please check your credentials and try again.",
-                        "Connection Failed"
-                    )
-                }
+            if (project == null) {
+                Messages.showErrorDialog(
+                    "No project open - could not load credentials",
+                    "No project opened"
+                )
+                return
             }
-            Messages.showErrorDialog(
-                "Authentication failed. Please check your credentials and try again.",
-                "Connection Failed"
-            )
+            val success = SalesforceService.instance(project).testConnection()
+            if (success) {
+                Messages.showInfoMessage(
+                    project, "Successfully connected to Salesforce.", "Connection Successful"
+                )
+            } else {
+                Messages.showErrorDialog(
+                    project,
+                    "Authentication failed. Please check your credentials and try again.",
+                    "Connection Failed"
+                )
+            }
         }
     }
 
