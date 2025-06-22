@@ -2,6 +2,7 @@ package com.github.sanandroid.jnforce.settings
 
 import com.github.sanandroid.jnforce.services.SalesforceService
 import com.intellij.ide.DataManager
+import com.intellij.ide.actions.AboutPopup
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.JBColor
@@ -11,9 +12,11 @@ import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
+import com.intellij.util.ui.JBUI
 import org.jetbrains.annotations.NotNull
 import java.awt.Component
 import java.awt.Dimension
+import java.awt.GridBagLayout
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
@@ -24,6 +27,7 @@ import javax.swing.ButtonGroup
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
+import javax.swing.border.EmptyBorder
 
 const val USERNAME = "username"
 const val CLIENT_ID = "clientId"
@@ -120,9 +124,10 @@ class JnForceComponent {
     }
 
     private val myTestConnection = JButton("Test Connection").apply {
+        layout = GridBagLayout();
         name = TEST_CONNECTION
-        putClientProperty("JButton.buttonType", "default")
-        setForeground(JBColor.RED)
+        preferredSize = Dimension(80, 33)
+        add(JBLabel("Test Connection"))
         text = "Test Connection"
         action = TestConnectionAction()
     }
@@ -170,89 +175,68 @@ class JnForceComponent {
                 add(myBaseUrlText)
                 add(JBLabel("Test Connection"))
                 add(myTestConnection)
-            }
-            add(mainSettingsPanel)
-            add(Box.createVerticalStrut(20))
-            val lowerPanel = JPanel().apply {
-                border = BorderFactory.createLineBorder(JBColor.GRAY, 1)
-                layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                add(Box.createVerticalStrut(20))
-                val radioPanel = JPanel().apply {
-                    layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                val classList = JPanel().apply {
+                    layout = BoxLayout(this, BoxLayout.X_AXIS)
                     alignmentX = Component.LEFT_ALIGNMENT
                     alignmentY = Component.TOP_ALIGNMENT
-                    size = Dimension(500, 100)
-                    // layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                    add(Box.createHorizontalStrut(10))
-                    val classList = JPanel().apply {
-                        layout = BoxLayout(this, BoxLayout.X_AXIS)
-                        alignmentX = Component.LEFT_ALIGNMENT
-                        alignmentY = Component.TOP_ALIGNMENT
-                        add(JBLabel("Use Class List"))
-                        add(Box.createHorizontalStrut(20))
-                        add(myUseClassListButton)
-                    }
-                    add(classList)
-                    val filtersButton = JPanel().apply {
-                        layout = BoxLayout(this, BoxLayout.X_AXIS)
-                        alignmentX = Component.LEFT_ALIGNMENT
-                        alignmentY = Component.TOP_ALIGNMENT
-                        add(
-                            JBLabel("Use Class Filters").apply {
-                                alignmentX = Component.LEFT_ALIGNMENT
-                                alignmentY = Component.TOP_ALIGNMENT
-                            })
-                        add(Box.createHorizontalStrut(20))
-                        add(myUseClassFiltersButton.apply {
+                    add(JBLabel("Use Class List"))
+                    add(Box.createHorizontalStrut(20))
+                    add(myUseClassListButton)
+                }
+                add(classList)
+                val filtersButton = JPanel().apply {
+                    layout = BoxLayout(this, BoxLayout.X_AXIS)
+                    alignmentX = Component.LEFT_ALIGNMENT
+                    alignmentY = Component.TOP_ALIGNMENT
+                    add(
+                        JBLabel("Use Class Filters").apply {
                             alignmentX = Component.LEFT_ALIGNMENT
                             alignmentY = Component.TOP_ALIGNMENT
                         })
-                    }
-                    add(filtersButton)
+                    add(Box.createHorizontalStrut(20))
+                    add(myUseClassFiltersButton.apply {
+                        alignmentX = Component.LEFT_ALIGNMENT
+                        alignmentY = Component.TOP_ALIGNMENT
+                    })
                 }
-                add(radioPanel)
-                add(Box.createVerticalStrut(20))
-                filtersPanel = JPanel().apply {
-                    layout = BoxLayout(this, BoxLayout.X_AXIS)
-                    layout = BoxLayout(this, BoxLayout.X_AXIS)
+                add(filtersButton)
+                val classTextFieldPanel = JPanel().apply {
                     alignmentX = Component.LEFT_ALIGNMENT
-                    val leftFilterPanel = JPanel().apply {
-                        alignmentX = Component.LEFT_ALIGNMENT
-                        layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                        add(Box.createVerticalStrut(20))
-                        add(Box.createHorizontalStrut(20))
-                        add(myClassListTextField).apply {
-                            add(Box.createVerticalStrut(20))
-                            add(Box.createHorizontalStrut(20))
-                        }
-                        add(myFilterCreatable)
-                        add(myFilterCustom)
-                        add(myFilterDeletable)
-                        add(myFilterLayoutable)
-                        add(myFilterMergeable)
-                        add(Box.createVerticalStrut(20))
-                        add(Box.createHorizontalStrut(20))
-                    }
-                    val rightFilterPanel = JPanel().apply {
-                        alignmentX = Component.LEFT_ALIGNMENT
-                        layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                        add(Box.createVerticalStrut(20))
-                        add(Box.createHorizontalStrut(20))
-                        add(myFilterReplicateable)
-                        add(myFilterRetrievable)
-                        add(myFilterSearchable)
-                        add(myFilterUpdateable)
-                        add(Box.createVerticalStrut(20))
-                        add(Box.createHorizontalStrut(20))
-                    }
-                    add(leftFilterPanel)
-                    add(rightFilterPanel)
+                    add(Box.createVerticalStrut(20))
+                    add(Box.createHorizontalStrut(20))
+                    add(myClassListTextField)
                 }
-                add(filtersPanel)
+                add(classTextFieldPanel)
+
             }
-            add(lowerPanel)
+            add(mainSettingsPanel)
+            filtersPanel = JPanel().apply {
+                layout = BoxLayout(this, BoxLayout.X_AXIS)
+                alignmentX = Component.LEFT_ALIGNMENT
+                val leftFilterPanel = JPanel().apply {
+                    alignmentX = Component.LEFT_ALIGNMENT
+                    layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                    add(myFilterCreatable)
+                    add(myFilterCustom)
+                    add(myFilterDeletable)
+                    add(myFilterLayoutable)
+                    add(myFilterMergeable)
+                }
+                val rightFilterPanel = JPanel().apply {
+                    alignmentX = Component.LEFT_ALIGNMENT
+                    layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                    add(myFilterReplicateable)
+                    add(myFilterRetrievable)
+                    add(myFilterSearchable)
+                    add(myFilterUpdateable)
+                    add(Box.createHorizontalStrut(20))
+                }
+                add(leftFilterPanel)
+                add(rightFilterPanel)
+            }
+            add(filtersPanel)
+            filterOrListVisible()
         }
-        filterOrListVisible()
     }
 
     private fun filterOrListVisible() {
@@ -385,12 +369,11 @@ class JnForceComponent {
                         "Connection Failed"
                     )
                 }
-
-                Messages.showErrorDialog(
-                    "Authentication failed. Please check your credentials and try again.",
-                    "Connection Failed"
-                )
             }
+            Messages.showErrorDialog(
+                "Authentication failed. Please check your credentials and try again.",
+                "Connection Failed"
+            )
         }
     }
 
