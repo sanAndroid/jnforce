@@ -1,24 +1,14 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.sanandroid.jnforce</id>
-    <name>JnForce Template</name>
+    <name>JnForce</name>
     <vendor>sanandroid</vendor>
 
+    <description>This plugin helps generate Kotlin data classes from Salesforce metadata.</description>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <!--        <notificationGroup id="Error communication with Salesforce"-->
-        <!--                           displayType="STICKY_BALLOON"-->
-        <!--                           key="com.github.sanandroid.jnforce.services"/>-->
-    </extensions>
-
-    <applicationListeners>
-        <!-- <listener class="com.github.sanandroid.jnforce.listeners.MyFrameStateListener"
-                  topic="com.intellij.ide.FrameStateListener"/> -->
-    </applicationListeners>
     <actions>
         <action id="ImportSalesforceDataClasses"
                 class="com.github.sanandroid.jnforce.actions.ImportSalesforceDataClasses"
