@@ -3,20 +3,15 @@
     <id>com.github.sanandroid.jnforce</id>
     <name>JnForce</name>
     <vendor>sanandroid</vendor>
-
-    <description>This plugin generates Kotlin data classes from Salesforce metadata to simplify JSON serialization
+    <description>
+        This plugin generates Kotlin data classes from Salesforce metadata to simplify JSON serialization
         and deserialization with Jackson. It streamlines integration with REST and Bulk APIs by providing type-safe
-        models.</description>
+        models.
+    </description>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <!--        <notificationGroup id="Error communication with Salesforce"-->
-        <!--                           displayType="STICKY_BALLOON"-->
-        <!--                           key="com.github.sanandroid.jnforce.services"/>-->
-    </extensions>
 
     <applicationListeners>
         <!-- <listener class="com.github.sanandroid.jnforce.listeners.MyFrameStateListener"

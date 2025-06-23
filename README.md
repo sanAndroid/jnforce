@@ -15,14 +15,6 @@
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
 - [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
 
-<!-- Plugin description -->
-
-JnForce connects to Salesforce’s /sobjects/describe endpoints and generates type-safe Kotlin data classes based on object metadata. 
-Designed for use with Jackson, these classes simplify serialization and deserialization of REST and Bulk API responses.
-
-Ideal for Kotlin-based backends, SDKs, and CLI tools, JnForce eliminates manual schema mapping and helps keep your local models in sync with Salesforce.
-
-<!-- Plugin description end -->
 
 ## Installation
 
