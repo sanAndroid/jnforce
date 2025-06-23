@@ -11,10 +11,22 @@
     <depends>com.intellij.modules.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!--        <notificationGroup id="Error communication with Salesforce"-->
+        <!--                           displayType="STICKY_BALLOON"-->
+        <!--                           key="com.github.sanandroid.jnforce.services"/>-->
+    </extensions>
+
+    <applicationListeners>
+        <!-- <listener class="com.github.sanandroid.jnforce.listeners.MyFrameStateListener"
+                  topic="com.intellij.ide.FrameStateListener"/> -->
+    </applicationListeners>
     <actions>
         <action id="ImportSalesforceDataClasses"
                 class="com.github.sanandroid.jnforce.actions.ImportSalesforceDataClasses"
-        >
+                text="Import Salesforce Data Classes"
+                description="Generate Kotlin data classes from Salesforce">
             <keyboard-shortcut
                 keymap="$default"
                 first-keystroke="control alt A"
