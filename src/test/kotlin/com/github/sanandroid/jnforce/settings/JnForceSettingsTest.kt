@@ -1,4 +1,5 @@
 package com.github.sanandroid.jnforce.settings
+
 import com.github.sanandroid.jnforce.state.JnForceSecureState
 import com.github.sanandroid.jnforce.state.JnForceState
 import com.intellij.testFramework.TestDataPath
@@ -7,6 +8,8 @@ import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
+import java.awt.Component
+import java.awt.Container
 import javax.swing.JPasswordField
 
 @TestDataPath("\$CONTENT_ROOT/src/test/testData")
@@ -86,7 +89,7 @@ class JnForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         assert(!JnForceState.instance.filterRetrieveable)
     }
 
-   fun testSearchable() {
+    fun testSearchable() {
         activateClassFilters()
         correctComponentIsUpdated(SEARCHABLE, "false")
         assert(!JnForceState.instance.filterSearchable)
@@ -115,19 +118,23 @@ class JnForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         assert(!JnForceState.instance.useClassList)
     }
 
+    private fun Container.getAllSubcomponents(): Iterable<Component> =
+        components.toList() + components.filter { it is Container }.flatMap { (it as Container).getAllSubcomponents() }
+
     private fun correctComponentIsUpdated(
         componentName: String,
         setTo: String = componentName,
     ) {
         val jlsForceConfigurable = JnForceConfigurable()
         val panel = jlsForceConfigurable.createComponent()
-        when (val jComponent = (panel?.components?.find { it.name == componentName }!!)) {
+        val jComponents = panel?.getAllSubcomponents()
+        when (val jComponent = (jComponents?.find { it.name == componentName }!!)) {
             is JBCheckBox -> jComponent.isSelected = setTo.toBoolean()
             is JBRadioButton -> jComponent.isSelected = setTo.toBoolean()
             is JBTextArea -> jComponent.text = setTo
             is JBTextField -> jComponent.text = setTo
             is JPasswordField -> {
-                (panel.components?.find { it.name == CLIENT_ID }!! as JBTextField).text = CLIENT_ID
+                (jComponents.find { it.name == CLIENT_ID }!! as JBTextField).text = CLIENT_ID
                 jComponent.text = setTo
             }
         }
