@@ -129,15 +129,16 @@ tasks {
 
     publishPlugin {
         dependsOn("patchChangelog")
-        token.set(environment("PUBLISH_TOKEN"))
+        token.set(environment("ORG_GRADLE_PROJECT_intellijPlatformPublishingToken"))
         // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        val provider = properties("pluginVersion").map {
-            listOf(
-                it.split('-').getOrElse(1) { "default" }.split('.').first(),
-            )
-        }
+        val provider = listOf("alpha")
+        //     properties("pluginVersion").map {
+        //     listOf(
+        //         it.split('-').getOrElse(1) { "default" }.split('.').first(),
+        //     )
+        // }
         channels.set(provider)
     }
 }
