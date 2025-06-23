@@ -1,4 +1,5 @@
-// package com.github.sanandroid.jnforce
+package com.github.sanandroid.jnforce
+
 //
 // import com.intellij.DynamicBundle
 // import org.jetbrains.annotations.NonNls

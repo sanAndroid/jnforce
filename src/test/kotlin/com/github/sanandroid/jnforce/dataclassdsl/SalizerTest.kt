@@ -2,8 +2,8 @@ package com.github.sanandroid.jnforce.dataclassdsl
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.sanandroid.jnforce.helpers.readFileDirectlyAsText
-import me.campos.corp.jnforce.model.Address
-import me.campos.corp.jnforce.model.Location
+import com.github.sanandroid.jnforce.model.Address
+import com.github.sanandroid.jnforce.model.Location
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

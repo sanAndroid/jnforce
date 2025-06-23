@@ -1,4 +1,4 @@
-package me.campos.corp.jnforce.model
+package com.github.sanandroid.jnforce.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude

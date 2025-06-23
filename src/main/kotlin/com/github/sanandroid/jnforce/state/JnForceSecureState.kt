@@ -6,15 +6,8 @@ import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.State
-import com.intellij.openapi.components.Storage
 import org.jetbrains.annotations.Nullable
 
-/**
- * Supports storing the application settings in a persistent way.
- * The [State] and [Storage] annotations define the name of the data and the file name where
- * these persistent application settings are stored.
- */
 @Service(Service.Level.APP)
 class JnForceSecureState {
 

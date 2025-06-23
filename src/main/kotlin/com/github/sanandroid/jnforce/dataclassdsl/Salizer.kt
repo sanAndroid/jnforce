@@ -5,8 +5,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
-import me.campos.corp.jnforce.model.toKotlinType
-import me.campos.corp.jnforce.poet.dataClass
+import com.github.sanandroid.jnforce.model.toKotlinType
 
 class Salizer {
 
@@ -63,5 +62,5 @@ class Salizer {
         }
     }
 
-    fun String.qualify(): String = replace("__c", "").replace("__s", "").replace("_", "")
+    fun String.qualify(): String = this.replace("__c", "").replace("__s", "").replace("_", "")
 }

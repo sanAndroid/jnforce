@@ -1,6 +1,6 @@
 package com.github.sanandroid.jnforce.dataclassdsl
 
-import me.campos.corp.jnforce.model.MappedType
+import com.github.sanandroid.jnforce.model.MappedType
 
 class ParameterBuilder {
     private val annotationsBuilder = AnnotationsBuilder()

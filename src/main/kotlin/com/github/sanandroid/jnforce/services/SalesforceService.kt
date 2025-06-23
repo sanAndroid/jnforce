@@ -1,10 +1,10 @@
 package com.github.sanandroid.jnforce.services
 
-import ADDRESS_TEMPLATE
-import LOCATION_TEMPLATE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.sanandroid.jnforce.dataclassdsl.Salizer
 import com.github.sanandroid.jnforce.helpers.writeFileDirectlyAsText
+import com.github.sanandroid.jnforce.model.ADDRESS_TEMPLATE
+import com.github.sanandroid.jnforce.model.LOCATION_TEMPLATE
 import com.github.sanandroid.jnforce.settings.CREATEABLE
 import com.github.sanandroid.jnforce.settings.CUSTOM
 import com.github.sanandroid.jnforce.settings.DELETABLE
@@ -291,7 +291,7 @@ class SalesforceService(
             )
         }
 
-    private fun String.useFS() = replace("/", fileSeparator)
+    private fun String.useFS() = this.replace("/", fileSeparator)
 }
 
 sealed class SalesforceResponse<T> {

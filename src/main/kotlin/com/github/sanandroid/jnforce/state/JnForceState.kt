@@ -7,11 +7,7 @@ import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jetbrains.annotations.Nullable
 
-/**
- * Supports storing the application settings in a persistent way.
- * The [State] and [Storage] annotations define the name of the data and the file name where
- * these persistent application settings are stored.
- */
+
 @State(
     name = "com.github.sanandroid.jnforce.settings.JlsForceState",
     storages = [Storage("JlsForcePlugin.xml")],

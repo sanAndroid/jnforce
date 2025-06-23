@@ -1,10 +1,4 @@
-package me.campos.corp.jnforce.poet
-
-import com.github.sanandroid.jnforce.dataclassdsl.AnnotationsBuilder
-import com.github.sanandroid.jnforce.dataclassdsl.Builder
-import com.github.sanandroid.jnforce.dataclassdsl.ImportsBuilder
-import com.github.sanandroid.jnforce.dataclassdsl.ModifiersBuilder
-import com.github.sanandroid.jnforce.dataclassdsl.ParametersBuilder
+package com.github.sanandroid.jnforce.dataclassdsl
 
 fun dataClass(lambda: DataClassBuilder.() -> Unit) =
     DataClassBuilder().apply(lambda)
