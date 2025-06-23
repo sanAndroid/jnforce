@@ -2,7 +2,7 @@
 
 # jnforce Changelog
 
-## 0.0.1 
+## Unreleased 
 ### Added
 - Initial version. Supports client credentials authentication to salesforce and creation of kotlin data classes using 
  filters or a list.
