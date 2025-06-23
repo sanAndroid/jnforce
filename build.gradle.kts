@@ -39,9 +39,9 @@ kotlin {
     jvmToolchain(17)
 }
 dependencies {
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.4")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     implementation(kotlin("stdlib-jdk8"))
 }
 
