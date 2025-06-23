@@ -1,4 +1,2 @@
 1) Add a connection test to ensure that authentication is working
 2) Add documentation explaining configuration better
-3) Test imports with class list and filters
-4) Verify for which de/serializer imports/exports work
