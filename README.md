@@ -28,7 +28,7 @@ Ideal for Kotlin-based backends, SDKs, and CLI tools, JnForce eliminates manual 
 
 - Using IDE built-in plugin system:
 
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "jlsforce"</kbd> >
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "jnforce"</kbd> >
   <kbd>Install Plugin</kbd>
 
 - Manually:
@@ -36,7 +36,21 @@ Ideal for Kotlin-based backends, SDKs, and CLI tools, JnForce eliminates manual 
   Download the [latest release](https://github.com/sanAndroid/jlsforce/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## Configuration
 
+Go to `Settings → Tools → JnForce Settings`. To connect to Salesforce, you must create a Salesforce Connected App and 
+obtain a **Client ID** and **Client Secret**. Enter these along with your Salesforce instance’s base URL.
+
+Currently, only the **Client Credentials** authentication flow is supported. Other OAuth flows can be added upon request.
+
+You also need to specify the **class path** and **package name** where the generated Kotlin data classes should be created.
+
+## Usage
+
+1. Open a Kotlin project.
+2. Click `Tools → Generate Salesforce Classes` 
+3. Classes will appear in the selected package.
+ 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
