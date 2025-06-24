@@ -24,8 +24,8 @@ class Salizer {
                 import { "com.fasterxml.jackson.annotation.JsonProperty" }
 
                 // Salesforce Types Imports
-                import { "me.campos.corp.jnforce.model.Address" }
-                import { "me.campos.corp.jnforce.model.Location" }
+                import { "com.github.sanandroid.jnforce.model.Address" }
+                import { "com.github.sanandroid.jnforce.model.Location" }
             }
             // Right now this automatically added { modifier { "data" } }
             name { className }

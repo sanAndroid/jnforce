@@ -3,8 +3,8 @@ package com.github.sanandroid.jnforce.model
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import me.campos.corp.jnforce.model.Address
-import me.campos.corp.jnforce.model.Location
+import com.github.sanandroid.jnforce.model.Address
+import com.github.sanandroid.jnforce.model.Location
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
