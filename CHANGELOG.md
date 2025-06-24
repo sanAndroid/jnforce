@@ -1,8 +1,16 @@
-<!-- Keep a Changelog guide -> https://keepachangelog.com -->
-
 # jnforce Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased 
 ### Added
 - Initial version. Supports client credentials authentication to salesforce and creation of kotlin data classes using 
  filters or a list.
+
+## [0.0.1] - 2025-06-24
+
+### Fixed
+- Fixed ci and qodana problems
