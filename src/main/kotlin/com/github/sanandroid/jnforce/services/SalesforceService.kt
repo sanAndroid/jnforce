@@ -70,13 +70,13 @@ class SalesforceService(
     }
 
     fun testConnection(): Boolean = runCatching {
-        val (jnForceState, jnForceSecureState, _ ) = getJnForceState()
+        val (jnForceState, jnForceSecureState, _) = getJnForceState()
         getToken(jnForceState, jnForceSecureState)
         true
     }.getOrDefault(false)
 
     private fun copyAddressAndLocation(jnForceState: JnForceState, packagePath: String) {
-        val packageDirective = "package ${getPackageName(jnForceState, packagePath)}"
+        val packageDirective = "package ${jnForceState.packageName}"
         val address = packageDirective + ADDRESS_TEMPLATE
         val location = packageDirective + LOCATION_TEMPLATE
         writeFileDirectlyAsText(path = packagePath, "Address.kt", address)
@@ -166,7 +166,6 @@ class SalesforceService(
     }
 
     private fun createDataclass(sObject: String, jnForceState: JnForceState, packagePath: String, token: String) {
-        val packageName = getPackageName(jnForceState, packagePath)
         val requestBuilder = HttpRequest.newBuilder()
             .uri(URI.create("${jnForceState.baseUrl}/services/$SOBJECT_SUFFIX$sObject/describe".useFS()))
             .header("Authorization", "Bearer $token")
@@ -175,7 +174,9 @@ class SalesforceService(
         val salesforceResponse = makeApiRequest(
             requestBuilder = requestBuilder,
             onSuccess = { responseAsString ->
-                SalesforceResponse.Success(Salizer().dataClassFromJsonForJackson(responseAsString.body(), packageName))
+                SalesforceResponse.Success(Salizer().dataClassFromJsonForJackson(responseAsString.body(),
+                    jnForceState.packageName
+                ))
             },
         )
         if (salesforceResponse is SalesforceResponse.Success)
@@ -185,18 +186,6 @@ class SalesforceService(
                 fileContent = salesforceResponse.responseBodyAsString
             )
     }
-
-    private fun getPackageName(
-        jnForceState: JnForceState,
-        packagePath: String
-    ) = (
-        if (jnForceState.packageName.isNullOrEmpty()) {
-            packagePath.split("kotlin$fileSeparator").last().replace(fileSeparator, ".").removeSuffix(".")
-                .removePrefix(".")
-        } else {
-            jnForceState.packageName!!.removeSuffix(".").removePrefix(".")
-        }
-        ).let { "$it\n" }
 
     private fun getToken(jnForceState: JnForceState, jnForceSecureState: JnForceSecureState): String {
         val request = getTokenRequest(jnForceState, jnForceSecureState)
@@ -274,22 +263,13 @@ class SalesforceService(
         SalesforceResponse.Error<T>()
     }
 
-    private fun getJnForceState() =
-        JnForceState.instance.let { jnForceState ->
-            Triple(
-                jnForceState,
-                JnForceSecureState.instance,
-                if (jnForceState.classPath.isNullOrEmpty()) {
-                    ProjectRootManager.getInstance(project).contentSourceRoots[0].canonicalPath!! + "/salesforce/".useFS()
-                } else {
-                    "${project.basePath}/src/main/kotlin/${jnForceState.classPath!!}/"
-                        .replace("//", "/")
-                        .replace("\\\\", "\\")
-                        .replace("\\s".toRegex(), "")
-                        .useFS()
-                },
-            )
-        }
+    private fun getJnForceState() = Triple(
+        JnForceState.instance,
+        JnForceSecureState.instance,
+        createClassPath(),
+    )
+
+    private fun createClassPath() = JnForceState.instance.packageName.replace(".", fileSeparator)
 
     private fun String.useFS() = this.replace("/", fileSeparator)
 }

@@ -24,8 +24,6 @@ class JnForceState : PersistentStateComponent<JnForceState?> {
     var clientId = ""
 
     var baseUrl = ""
-    var classPath: String? = null
-    var packageName: String? = null
 
     var filterLayoutable = false
     var filterCreatable = true

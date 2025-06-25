@@ -1,2 +1,2 @@
-1) Add a connection test to ensure that authentication is working
+1) remove path text box since package name should be enough - try to get package name prefix by parsing open projects
 2) Add documentation explaining configuration better

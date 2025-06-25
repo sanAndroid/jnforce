@@ -72,9 +72,9 @@ class JnForceComponent {
     private val myPackageNameText = JBTextField().apply {
         name = PACKAGE_NAME
     }
-    private val myClassPathText = JBTextField().apply {
-        name = CLASS_PATH
-    }
+    // private val myClassPathText = JBTextField().apply {
+    //     name = CLASS_PATH
+    // }
     private val myFilterCreatable = JBCheckBox("Only load creatable").apply {
         name = CREATEABLE
         isVisible = false
@@ -164,8 +164,8 @@ class JnForceComponent {
                 add(myClientSecretText)
                 add(JBLabel("Package name"))
                 add(myPackageNameText)
-                add(JBLabel("Class path"))
-                add(myClassPathText)
+                // add(JBLabel("Class path"))
+                // add(myClassPathText)
                 add(JBLabel("Base url"))
                 add(myBaseUrlText)
                 add(JBLabel("Test Connection"))
@@ -293,11 +293,12 @@ class JnForceComponent {
         set(newText) {
             myPackageNameText.text = newText
         }
-    var classPathText: String
-        get() = myClassPathText.text
-        set(newText) {
-            myClassPathText.text = newText
-        }
+
+    // var classPathText: String
+    //     get() = myClassPathText.text
+    //     set(newText) {
+    //         myClassPathText.text = newText
+    //     }
 
     var filterCreatable: Boolean
         get() = myFilterCreatable.isSelected

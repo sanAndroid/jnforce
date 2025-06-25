@@ -33,7 +33,6 @@ class JnForceConfigurable : Configurable {
         var modified = (mySettingsComponent?.clientIdText != settings.clientId)
         modified = modified or (mySettingsComponent?.baseUrlText != settings.baseUrl)
         modified = modified or (mySettingsComponent?.packageNameText != settings.packageName)
-        modified = modified or (mySettingsComponent?.classPathText != settings.classPath)
         modified = modified or (mySettingsComponent?.filterCreatable != settings.filterCreatable)
         modified = modified or (mySettingsComponent?.filterCustom != settings.filterCustom)
         modified = modified or (mySettingsComponent?.filterDeletable != settings.filterDeletable)
@@ -59,7 +58,7 @@ class JnForceConfigurable : Configurable {
         settings.clientId = mySettingsComponent?.clientIdText ?: ""
         settings.baseUrl = mySettingsComponent?.baseUrlText ?: ""
         settings.packageName = mySettingsComponent?.packageNameText ?: ""
-        settings.classPath = mySettingsComponent?.classPathText ?: ""
+        // settings.classPath = mySettingsComponent?.classPathText ?: ""
         settings.filterCreatable = mySettingsComponent?.filterCreatable ?: true
         settings.filterCustom = mySettingsComponent?.filterCustom ?: false
         settings.filterLayoutable = mySettingsComponent?.filterLayoutable ?: true
@@ -86,7 +85,7 @@ class JnForceConfigurable : Configurable {
         // mySettingsComponent!!.userNameText = settings.username
         mySettingsComponent!!.clientIdText = settings.clientId
         mySettingsComponent!!.packageNameText = settings.packageName ?: ""
-        mySettingsComponent!!.classPathText = settings.classPath ?: ""
+        // mySettingsComponent!!.classPathText = settings.classPath ?: ""
         mySettingsComponent!!.baseUrlText = settings.baseUrl
         mySettingsComponent!!.filterCreatable = settings.filterCreatable
         mySettingsComponent!!.filterCustom = settings.filterCustom
