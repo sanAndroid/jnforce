@@ -25,6 +25,7 @@ class JnForceState : PersistentStateComponent<JnForceState?> {
 
     var baseUrl = ""
 
+    var packageName = "model.salesforce"
     var filterLayoutable = false
     var filterCreatable = true
     var filterCustom = false

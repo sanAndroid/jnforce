@@ -76,9 +76,11 @@ class SalesforceService(
     }.getOrDefault(false)
 
     private fun copyAddressAndLocation(jnForceState: JnForceState, packagePath: String) {
-        val packageDirective = "package ${jnForceState.packageName}"
+        val packageDirective = "package ${jnForceState.packageName}\n"
         val address = packageDirective + ADDRESS_TEMPLATE
         val location = packageDirective + LOCATION_TEMPLATE
+        // project.basePath = project.basePath
+        //TODO: Mention that this convention is used in the plugin
         writeFileDirectlyAsText(path = packagePath, "Address.kt", address)
         writeFileDirectlyAsText(path = packagePath, "Location.kt", location)
     }
@@ -174,9 +176,12 @@ class SalesforceService(
         val salesforceResponse = makeApiRequest(
             requestBuilder = requestBuilder,
             onSuccess = { responseAsString ->
-                SalesforceResponse.Success(Salizer().dataClassFromJsonForJackson(responseAsString.body(),
-                    jnForceState.packageName
-                ))
+                SalesforceResponse.Success(
+                    Salizer().dataClassFromJsonForJackson(
+                        responseAsString.body(),
+                        jnForceState.packageName
+                    )
+                )
             },
         )
         if (salesforceResponse is SalesforceResponse.Success)
@@ -269,7 +274,10 @@ class SalesforceService(
         createClassPath(),
     )
 
-    private fun createClassPath() = JnForceState.instance.packageName.replace(".", fileSeparator)
+    private fun createClassPath() =
+        ProjectRootManager.getInstance(project).contentRoots.firstOrNull { it.path.contains("src/main") }
+            .toString() + "/kotlin/" +
+            JnForceState.instance.packageName.replace(".", fileSeparator)
 
     private fun String.useFS() = this.replace("/", fileSeparator)
 }
