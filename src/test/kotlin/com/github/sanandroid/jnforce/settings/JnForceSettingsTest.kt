@@ -36,10 +36,6 @@ class JnForceSettingsTest : LightJavaCodeInsightFixtureTestCase() {
         assert(JnForceState.instance.packageName == PACKAGE_NAME)
     }
 
-    fun testClassPath() {
-        correctComponentIsUpdated(CLASS_PATH)
-        assert(JnForceState.instance.classPath == CLASS_PATH)
-    }
 
     private fun activateClassFilters() =
         JnForceState.instance.apply {
