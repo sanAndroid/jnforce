@@ -2,6 +2,7 @@
 <idea-plugin>
     <id>com.github.sanandroid.jnforce</id>
     <name>JnForce</name>
+    <version>0.0.1</version>
     <vendor>sanandroid</vendor>
     <description>
         This plugin generates Kotlin data classes from Salesforce metadata to simplify JSON serialization
@@ -18,6 +19,7 @@
                   topic="com.intellij.ide.FrameStateListener"/> -->
     </applicationListeners>
     <actions>
+        <!--suppress PluginXmlI18n -->
         <action id="ImportSalesforceDataClasses"
                 class="com.github.sanandroid.jnforce.actions.ImportSalesforceDataClasses"
                 text="Import Salesforce Data Classes"

@@ -11,6 +11,7 @@ import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
 import org.jetbrains.annotations.NotNull
+import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.GridBagLayout
@@ -65,7 +66,7 @@ class JnForceComponent {
     }
 
     private val myBaseUrlText = JBTextField().apply {
-        text = "Base Url"
+        text = "Base URL"
         name = BASE_URL
     }
     private val myPackageNameText = JBTextField().apply {
@@ -74,42 +75,33 @@ class JnForceComponent {
 
     private val myFilterCreatable = JBCheckBox("Only load creatable").apply {
         name = CREATEABLE
-        isVisible = false
     }
     private val myFilterCustom = JBCheckBox("Only load custom").apply {
         name = CUSTOM
-        isVisible = false
     }
 
     private val myFilterDeletable = JBCheckBox("Only load deletable").apply {
         name = DELETABLE
-        isVisible = false
     }
 
     private val myFilterLayoutable = JBCheckBox("Only load layoutable").apply {
         name = LAYOUTABLE
-        isVisible = false
     }
 
     private val myFilterMergeable = JBCheckBox("Only load mergeable").apply {
         name = MERGEABLE
-        isVisible = false
     }
     private val myFilterReplicateable = JBCheckBox("Only load replicatable").apply {
         name = REPLICATEABLE
-        isVisible = false
     }
     private val myFilterRetrievable = JBCheckBox("Only load retrievable").apply {
         name = RETRIEVEABLE
-        isVisible = false
     }
     private val myFilterSearchable = JBCheckBox("Only load searchable").apply {
         name = SEARCHABLE
-        isVisible = false
     }
     private val myFilterUpdateable = JBCheckBox("Only load updateable").apply {
         name = UPDATEABLE
-        isVisible = false
     }
 
     private val myClientSecretText = JBPasswordField().apply {
@@ -137,7 +129,9 @@ class JnForceComponent {
 
     private val myClassListTextField = JBTextArea().apply {
         name = CLASS_LIST
-        isVisible = false
+        emptyText.apply {
+            text = "Enter class list here ..."
+        }
     }
 
     init {
@@ -195,10 +189,11 @@ class JnForceComponent {
             add(mainSettingsPanel)
             classTextFieldPanel = JPanel().apply {
                 alignmentX = Component.LEFT_ALIGNMENT
-                add(Box.createVerticalStrut(20))
-                add(Box.createHorizontalStrut(20))
-                add(myClassListTextField)
+                layout = BorderLayout()
+                add(myClassListTextField, BorderLayout.PAGE_START)
+
             }
+            add(classTextFieldPanel)
             filtersPanel = JPanel().apply {
                 layout = BoxLayout(this, BoxLayout.X_AXIS)
                 alignmentX = Component.LEFT_ALIGNMENT
@@ -224,35 +219,21 @@ class JnForceComponent {
                 add(rightFilterPanel)
             }
             add(filtersPanel)
-            add(classTextFieldPanel)
-            filterOrListVisible(this)
         }
+        filterOrListVisible()
     }
 
-    private fun filterOrListVisible(panel: JPanel) = with(panel) {
+    private fun filterOrListVisible() = with(panel) {
+        when (myUseClassFiltersButton.isSelected) {
+            true -> {
+                filtersPanel.isVisible = true
+                classTextFieldPanel.isVisible = false
+            }
 
-        if (myUseClassFiltersButton.isSelected) {
-            myFilterCreatable.isVisible = true
-            myFilterCustom.isVisible = true
-            myFilterDeletable.isVisible = true
-            myFilterMergeable.isVisible = true
-            myFilterLayoutable.isVisible = true
-            myFilterReplicateable.isVisible = true
-            myFilterRetrievable.isVisible = true
-            myFilterSearchable.isVisible = true
-            myFilterUpdateable.isVisible = true
-            myClassListTextField.isVisible = false
-        } else {
-            myFilterCreatable.isVisible = false
-            myFilterCustom.isVisible = false
-            myFilterDeletable.isVisible = false
-            myFilterMergeable.isVisible = false
-            myFilterLayoutable.isVisible = false
-            myFilterReplicateable.isVisible = false
-            myFilterRetrievable.isVisible = false
-            myFilterSearchable.isVisible = false
-            myFilterUpdateable.isVisible = false
-            myClassListTextField.isVisible = true
+            else -> {
+                filtersPanel.isVisible = false
+                classTextFieldPanel.isVisible = true
+            }
         }
         revalidate()
         repaint()
@@ -342,13 +323,13 @@ class JnForceComponent {
         get() = myUseClassListButton.isSelected
         set(newStatus) {
             myUseClassListButton.isSelected = newStatus
-            filterOrListVisible(panel)
+            filterOrListVisible()
         }
     var useClassFilters: Boolean
         get() = myUseClassFiltersButton.isSelected
         set(newStatus) {
             myUseClassFiltersButton.isSelected = newStatus
-            filterOrListVisible(panel)
+            filterOrListVisible()
         }
     var classList: String
         get() = myClassListTextField.text
@@ -384,39 +365,10 @@ class JnForceComponent {
     }
 
     inner class UseClassFilterAction : AbstractAction() {
-        override fun actionPerformed(@NotNull e: ActionEvent) = with(panel) {
-            // layout = GridLayout(0, 1)
-            myFilterCreatable.isVisible = true
-            myFilterCustom.isVisible = true
-            myFilterDeletable.isVisible = true
-            myFilterMergeable.isVisible = true
-            myFilterLayoutable.isVisible = true
-            myFilterReplicateable.isVisible = true
-            myFilterRetrievable.isVisible = true
-            myFilterSearchable.isVisible = true
-            myFilterUpdateable.isVisible = true
-
-            myClassListTextField.isVisible = false
-            revalidate()
-            repaint()
-        }
+        override fun actionPerformed(@NotNull e: ActionEvent) = filterOrListVisible()
     }
 
     inner class UseClassListAction : AbstractAction() {
-        override fun actionPerformed(@NotNull e: ActionEvent) = with(panel) {
-            myFilterCreatable.isVisible = false
-            myFilterCustom.isVisible = false
-            myFilterDeletable.isVisible = false
-            myFilterMergeable.isVisible = false
-            myFilterLayoutable.isVisible = false
-            myFilterReplicateable.isVisible = false
-            myFilterRetrievable.isVisible = false
-            myFilterSearchable.isVisible = false
-            myFilterUpdateable.isVisible = false
-
-            myClassListTextField.isVisible = true
-            revalidate()
-            repaint()
-        }
+        override fun actionPerformed(@NotNull e: ActionEvent) = filterOrListVisible()
     }
 }
