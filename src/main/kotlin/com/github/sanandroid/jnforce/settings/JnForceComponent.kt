@@ -190,16 +190,15 @@ class JnForceComponent {
                     })
                 }
                 add(filtersButton)
-                classTextFieldPanel = JPanel().apply {
-                    alignmentX = Component.LEFT_ALIGNMENT
-                    add(Box.createVerticalStrut(20))
-                    add(Box.createHorizontalStrut(20))
-                    add(myClassListTextField)
-                }
-                add(classTextFieldPanel)
 
             }
             add(mainSettingsPanel)
+            classTextFieldPanel = JPanel().apply {
+                alignmentX = Component.LEFT_ALIGNMENT
+                add(Box.createVerticalStrut(20))
+                add(Box.createHorizontalStrut(20))
+                add(myClassListTextField)
+            }
             filtersPanel = JPanel().apply {
                 layout = BoxLayout(this, BoxLayout.X_AXIS)
                 alignmentX = Component.LEFT_ALIGNMENT
@@ -225,6 +224,7 @@ class JnForceComponent {
                 add(rightFilterPanel)
             }
             add(filtersPanel)
+            add(classTextFieldPanel)
             filterOrListVisible(this)
         }
     }
