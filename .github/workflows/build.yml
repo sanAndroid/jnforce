@@ -106,7 +106,7 @@ jobs:
 
       # Collect Plugin Verifier Result
       - name: Collect Plugin Verifier Result
-        if: ${{ always() }npm install -g @jetbrains/qodana-cli}
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: pluginVerifier-result
