@@ -14,3 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed ci and qodana problems
+
+## [0.0.2] - 2025-06-030
+
+### Fixed
+- Fixed ui problems in the settings windows
+ 
