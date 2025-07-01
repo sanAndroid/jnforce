@@ -149,14 +149,14 @@ class JnForceComponent {
             alignmentY = Component.TOP_ALIGNMENT
             val mainSettingsPanel = JPanel().apply {
                 layout = GridLayout(0, 1, 10, 10)
+                add(JBLabel("Base URL"))
+                add(myBaseUrlText)
                 add(JBLabel("ClientId"))
                 add(myClientIdText)
                 add(JBLabel("ClientSecret"))
                 add(myClientSecretText)
                 add(JBLabel("Package name"))
                 add(myPackageNameText)
-                add(JBLabel("Base url"))
-                add(myBaseUrlText)
                 add(JBLabel("Test Connection"))
                 add(myTestConnection)
                 val classList = JPanel().apply {
