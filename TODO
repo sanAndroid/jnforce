@@ -1,2 +1,3 @@
-1) remove path text box since package name should be enough - try to get package name prefix by parsing open projects
-2) Add documentation explaining configuration better
+1) Refactor JnForceComponent using kotlin dsl
+2) Extract an authentication service/module from the Salesforce Service in order to facilitate implementation of
+other flows

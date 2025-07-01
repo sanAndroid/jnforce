@@ -8,6 +8,8 @@
         This plugin generates Kotlin data classes from Salesforce metadata to simplify JSON serialization
         and deserialization with Jackson. It streamlines integration with REST and Bulk APIs by providing type-safe
         models.
+        More information can be found at
+        &lt;a href="https://github.com/sanAndroid/jnforce/blob/main/README.md"&gt;GitHub – README.md&lt;/a&gt;.
     </description>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>

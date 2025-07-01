@@ -1,20 +1,10 @@
 
-# jlsforce
+# JnForce
+## Description
 
-![Build](https://github.com/sanAndroid/jlsforce/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/27728-jnforce.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/27728-jnforce)
-
-## Template ToDo list
-- [x] Adjust the [pluginGroup](./gradle.properties), [plugin ID](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [x] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [x] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [x] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `PLUGIN_ID` in the above README badges.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-
+This plugin generates Kotlin data classes from Salesforce metadata to simplify JSON serialization
+and deserialization with Jackson. It streamlines integration with REST and Bulk APIs by providing type-safe
+models.
 
 ## Installation
 
@@ -24,24 +14,28 @@
   <kbd>Install Plugin</kbd>
 
 - Manually:
-
-  Download the [latest release](https://github.com/sanAndroid/jlsforce/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+  Currently not supported
 
 ## Configuration
 
-Go to `Settings → Tools → JnForce Settings`. To connect to Salesforce, you must create a Salesforce Connected App and 
-obtain a **Client ID** and **Client Secret**. Enter these along with your Salesforce instance’s base URL.
+Go to Settings → Tools → JnForce Settings.
 
-Currently, only the **Client Credentials** authentication flow is supported. Other OAuth flows can be added upon request.
+Enter the base URL of your Salesforce instance and your credentials. To connect, you must create a Salesforce Connected App and provide the Client ID and Client Secret.
 
-You also need to specify the **class path** and **package name** where the generated Kotlin data classes should be created.
+Currently, only the Client Credentials authentication flow is supported. Other OAuth flows can be added upon request.
+
+You also need to specify the full package name for the generated data classes. This determines both their namespace and the output directory structure.
+
+Salesforce objects can be selected in one of two ways:
+– by filtering based on object properties (e.g., creatable, retrievable), or
+– by providing a comma-separated list of class names.
 
 ## Usage
 
 1. Open a Kotlin project.
 2. Click `Tools → Generate Salesforce Classes` 
 3. Classes will appear in the selected package.
+4. Classes should work with jackson for de/serialization. 
  
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
