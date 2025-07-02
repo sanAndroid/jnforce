@@ -1,10 +1,12 @@
 
 # JnForce
 ## Description
-
+<!-- Plugin description -->
 This plugin generates Kotlin data classes from Salesforce metadata to simplify JSON serialization
 and deserialization with Jackson. It streamlines integration with REST and Bulk APIs by providing type-safe
-models.
+models. It maybe especially helpful when you have to deal with frequent changes in Salesforce Objects.
+<!-- Plugin description end -->
+
 
 ## Installation
 
