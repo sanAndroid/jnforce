@@ -108,12 +108,12 @@ class JnForceComponent {
         name = CLIENT_SECRET
     }
 
-    private val myTestConnection = JButton("Test Connection").apply {
+    private val myTestConnection = JButton("Test connection").apply {
         layout = GridBagLayout()
         name = TEST_CONNECTION
         preferredSize = Dimension(80, 33)
-        add(JBLabel("Test Connection"))
-        text = "Test Connection"
+        add(JBLabel("Test connection"))
+        text = "Test connection"
         action = TestConnectionAction()
     }
 
@@ -157,13 +157,13 @@ class JnForceComponent {
                 add(myClientSecretText)
                 add(JBLabel("Package name"))
                 add(myPackageNameText)
-                add(JBLabel("Test Connection"))
+                add(JBLabel("Test connection"))
                 add(myTestConnection)
                 val classList = JPanel().apply {
                     layout = BoxLayout(this, BoxLayout.X_AXIS)
                     alignmentX = Component.LEFT_ALIGNMENT
                     alignmentY = Component.TOP_ALIGNMENT
-                    add(JBLabel("Use Class List"))
+                    add(JBLabel("Use class list"))
                     add(Box.createHorizontalStrut(20))
                     add(myUseClassListButton)
                 }
@@ -173,7 +173,7 @@ class JnForceComponent {
                     alignmentX = Component.LEFT_ALIGNMENT
                     alignmentY = Component.TOP_ALIGNMENT
                     add(
-                        JBLabel("Use Class Filters").apply {
+                        JBLabel("Use class filters").apply {
                             alignmentX = Component.LEFT_ALIGNMENT
                             alignmentY = Component.TOP_ALIGNMENT
                         })
@@ -345,7 +345,7 @@ class JnForceComponent {
             if (project == null) {
                 Messages.showErrorDialog(
                     "No project open - could not load credentials",
-                    "No project opened"
+                    "No Project Opened"
                 )
                 return
             }
