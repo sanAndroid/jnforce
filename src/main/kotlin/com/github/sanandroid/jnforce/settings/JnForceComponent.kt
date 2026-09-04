@@ -3,14 +3,15 @@ package com.github.sanandroid.jnforce.settings
 import com.github.sanandroid.jnforce.services.SalesforceService
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.util.ThrowableComputable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
-import org.jetbrains.annotations.NotNull
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
@@ -290,7 +291,7 @@ class JnForceComponent {
     var filterLayoutable: Boolean
         get() = myFilterLayoutable.isSelected
         set(newStatus) {
-            myFilterCustom.isSelected = newStatus
+            myFilterLayoutable.isSelected = newStatus
         }
 
     var filterMergeable: Boolean
@@ -340,7 +341,7 @@ class JnForceComponent {
     inner class TestConnectionAction : AbstractAction() {
         // TODO: as of now SF credentials are not safed on a per project basis even though that makes sense
         // and the salesforce service actually needs a project to open
-        override fun actionPerformed(@NotNull e: ActionEvent): Unit = with(panel) {
+        override fun actionPerformed(e: ActionEvent): Unit = with(panel) {
             val project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this))
             if (project == null) {
                 Messages.showErrorDialog(
@@ -349,7 +350,13 @@ class JnForceComponent {
                 )
                 return
             }
-            val success = SalesforceService.instance(project).testConnection()
+            // The connection test performs blocking network I/O, which must not run on the EDT.
+            val success = ProgressManager.getInstance().runProcessWithProgressSynchronously<Boolean, Exception>(
+                ThrowableComputable { SalesforceService.instance(project).testConnection() },
+                "Testing Salesforce Connection",
+                true,
+                project,
+            )
             if (success) {
                 Messages.showInfoMessage(
                     project, "Successfully connected to Salesforce.", "Connection Successful"
@@ -365,10 +372,10 @@ class JnForceComponent {
     }
 
     inner class UseClassFilterAction : AbstractAction() {
-        override fun actionPerformed(@NotNull e: ActionEvent) = filterOrListVisible()
+        override fun actionPerformed(e: ActionEvent) = filterOrListVisible()
     }
 
     inner class UseClassListAction : AbstractAction() {
-        override fun actionPerformed(@NotNull e: ActionEvent) = filterOrListVisible()
+        override fun actionPerformed(e: ActionEvent) = filterOrListVisible()
     }
 }

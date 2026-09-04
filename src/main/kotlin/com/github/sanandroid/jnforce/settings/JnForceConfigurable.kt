@@ -14,7 +14,7 @@ class JnForceConfigurable : Configurable {
 
     @Nls(capitalization = Nls.Capitalization.Title)
     override fun getDisplayName(): String {
-        return "JLsForce Settings"
+        return "JnForce Settings"
     }
 
     override fun getPreferredFocusedComponent(): JComponent? {

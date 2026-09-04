@@ -1,6 +1,9 @@
 .gradle
 .idea
+.intellijPlatform
+.kotlin
 .qodana
 build
 lib
 certs
+.DS_Store
